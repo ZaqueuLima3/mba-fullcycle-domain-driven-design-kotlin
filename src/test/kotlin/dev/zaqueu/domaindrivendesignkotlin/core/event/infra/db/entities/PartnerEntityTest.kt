@@ -1,6 +1,8 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
+import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.PartnerEntity.Companion.toDomain
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions
@@ -40,5 +42,30 @@ class PartnerEntityTest {
         val foundPartnerEntity = entityManager.find(PartnerEntity::class.java, partnerEntity.id)
         Assertions.assertNotNull(foundPartnerEntity)
         Assertions.assertEquals(partnerEntity.name, foundPartnerEntity.name)
+    }
+
+    @Test
+    fun `should convert a PartnerEntity to Partner domain`() {
+        val partnerEntity = PartnerEntity(
+            id = UUID.randomUUID(),
+            name = "Test Partner"
+        )
+
+        val partner = partnerEntity.toDomain()
+
+        Assertions.assertInstanceOf(Partner::class.java, partner)
+        Assertions.assertEquals(partnerEntity.name, partner.name)
+    }
+
+    @Test
+    fun `should convert a Partner domain to PartnerEntity`() {
+        val partner = Partner.create(
+            name = "Test Partner"
+        )
+
+        val partnerEntity = PartnerEntity.fromDomain(partner)
+
+        Assertions.assertInstanceOf(PartnerEntity::class.java, partnerEntity)
+        Assertions.assertEquals(partner.name, partnerEntity.name)
     }
 }

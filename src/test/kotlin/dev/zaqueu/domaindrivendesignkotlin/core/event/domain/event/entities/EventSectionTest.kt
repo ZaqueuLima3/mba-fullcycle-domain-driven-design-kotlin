@@ -111,4 +111,24 @@ class EventSectionTest {
         section.addSpot(EventSpot.create())
         Assertions.assertEquals(expectedSectionTotalSpots +1, section.totalSpots)
     }
+
+    @Test
+    fun `should add a list of spots`() {
+        val expectedSectionName = "Section one"
+        val expectedSectionDescription = "Some section description"
+        val expectedSectionTotalSpots = 10L
+        val expectedSectionPrice = 1000L
+
+        val section = EventSection.create(
+            name = expectedSectionName,
+            description = expectedSectionDescription,
+            totalSpots = expectedSectionTotalSpots,
+            price = expectedSectionPrice,
+        )
+
+        Assertions.assertEquals(expectedSectionTotalSpots, section.totalSpots)
+
+        section.addSpots(mutableSetOf(EventSpot.create()))
+        Assertions.assertEquals(expectedSectionTotalSpots +1, section.totalSpots)
+    }
 }

@@ -58,16 +58,28 @@ class EventMysqlRepositoryTest {
         Assertions.assertEquals(event.name, eventEntity.name)
         Assertions.assertEquals(event.description, eventEntity.description)
         Assertions.assertEquals(event.date, eventEntity.date)
+        Assertions.assertEquals(event.totalSpots, eventEntity.totalSpots)
         Assertions.assertEquals(event.partnerId.value, eventEntity.partnerId.toString())
         Assertions.assertEquals(event.sections.size, eventEntity.sections.size)
 
         val sectionEntity = eventEntity.sections.first()
+        Assertions.assertEquals(section.id.value, sectionEntity.id.toString())
+        Assertions.assertEquals(event.id.value, sectionEntity.event.id.toString())
         Assertions.assertEquals(section.name, sectionEntity.name)
         Assertions.assertEquals(section.description, sectionEntity.description)
+        Assertions.assertEquals(section.isPublished, sectionEntity.isPublished)
         Assertions.assertEquals(section.totalSpots, sectionEntity.totalSpots)
         Assertions.assertEquals(section.totalSpotsReserved.toLong(), sectionEntity.totalSpotsReserved)
         Assertions.assertEquals(section.price, sectionEntity.price)
         Assertions.assertEquals(section.spots.size, sectionEntity.spots.size)
+
+        val spot = section.spots.first()
+        val spotEntity = sectionEntity.spots.first { it.id.toString() == spot.id.value }
+        Assertions.assertEquals(spot.id.value, spotEntity.id.toString())
+        Assertions.assertEquals(section.id.value, spotEntity.eventSection.id.toString())
+        Assertions.assertEquals(spot.location, spotEntity.location)
+        Assertions.assertEquals(spot.isReserved, spotEntity.isReserved)
+        Assertions.assertEquals(spot.isPublished, spotEntity.isPublished)
     }
 
     @Test

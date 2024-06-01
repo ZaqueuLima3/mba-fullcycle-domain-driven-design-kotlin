@@ -38,6 +38,7 @@ internal class EventSection(
 
     fun addSpots(spots: Set<EventSpot>) {
         _spots.addAll(spots)
+        totalSpots = _spots.size.toLong()
     }
 
     fun addSpot(spot: EventSpot) {
