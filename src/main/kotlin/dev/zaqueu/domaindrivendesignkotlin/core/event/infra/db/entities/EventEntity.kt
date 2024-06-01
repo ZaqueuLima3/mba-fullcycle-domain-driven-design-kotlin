@@ -30,15 +30,16 @@ internal class EventEntity(
     @Column(name = "total_spots_reserved")
     var totalSpotsReserved: Long,
 
-    @Column(name = "partner_id")
-    var partnerId: UUID,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "partner_id", nullable = false)
+    var partner: PartnerEntity,
 ) {
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     var sections: MutableSet<EventSectionEntity> = mutableSetOf()
 
     companion object {
-        fun fromDomain(event: Event): EventEntity {
+        fun fromDomain(event: Event, partner: PartnerEntity): EventEntity {
             val eventEntity = EventEntity(
                 id = UUID.fromString(event.id.value),
                 name = event.name,
@@ -47,7 +48,7 @@ internal class EventEntity(
                 isPublished = event.isPublished,
                 totalSpots = event.totalSpots,
                 totalSpotsReserved = event.totalSpotsReserved,
-                partnerId = UUID.fromString(event.partnerId.value),
+                partner = partner,
             )
 
             eventEntity.sections = event.sections.map { EventSectionEntity.fromDomain(it, eventEntity) }.toMutableSet()
@@ -63,7 +64,7 @@ internal class EventEntity(
                 date = date,
                 isPublished = isPublished,
                 totalSpotsReserved = totalSpotsReserved,
-                partnerId = partnerId.toString(),
+                partnerId = partner.id.toString(),
                 sections = sections.map { it.toDomain() }.toSet()
             )
         }

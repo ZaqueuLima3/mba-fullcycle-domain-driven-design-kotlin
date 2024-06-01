@@ -34,7 +34,7 @@ internal class EventSectionEntity(
     @JoinColumn(name = "event_id")
     var event: EventEntity
 ) {
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_section_id")
     var spots: MutableSet<EventSpotEntity> = mutableSetOf()
 

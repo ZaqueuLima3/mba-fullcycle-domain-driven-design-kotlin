@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSpot
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventSpotEntity.Companion.toDomain
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -19,6 +20,9 @@ import java.util.*
 class EventSpotSectionEntityTest {
     @Test
     fun `should convert a EventSpotEntity to EventSpot domain`() {
+        val partner = Partner.create(
+            "Test name"
+        )
         val eventEntity = EventEntity(
             id = UUID.randomUUID(),
             name = "Test Event",
@@ -27,7 +31,7 @@ class EventSpotSectionEntityTest {
             isPublished = false,
             totalSpots = 0,
             totalSpotsReserved = 0,
-            partnerId = UUID.randomUUID(),
+            partner = PartnerEntity.fromDomain(partner),
         )
 
         val eventSectionEntity = EventSectionEntity(
@@ -58,6 +62,9 @@ class EventSpotSectionEntityTest {
 
     @Test
     fun `should convert a EventSpot domain to EventSpotEntity`() {
+        val partner = Partner.create(
+            "Test name"
+        )
         val eventEntity = EventEntity(
             id = UUID.randomUUID(),
             name = "Test Event",
@@ -66,7 +73,7 @@ class EventSpotSectionEntityTest {
             isPublished = false,
             totalSpots = 0,
             totalSpotsReserved = 0,
-            partnerId = UUID.randomUUID(),
+            partner = PartnerEntity.fromDomain(partner),
         )
 
         val eventSectionEntity = EventSectionEntity(

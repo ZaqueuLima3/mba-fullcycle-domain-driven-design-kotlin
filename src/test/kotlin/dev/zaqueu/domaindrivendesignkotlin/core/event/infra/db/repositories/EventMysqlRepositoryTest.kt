@@ -5,6 +5,8 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Even
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEntity
 import jakarta.persistence.EntityManager
@@ -29,11 +31,18 @@ class EventMysqlRepositoryTest {
     private lateinit var entityManager: EntityManager
 
     @Autowired
+    private lateinit var partnerRepository: PartnerRepository
+
+    @Autowired
     private lateinit var eventRepository: EventRepository
 
     @Test
     @Transactional
     fun `should add a new event`() {
+        val partner = Partner.create(
+            name = "Test Name"
+        )
+
         val section = EventSection.create(
             name = "Section",
             description = "Some section description",
@@ -41,14 +50,14 @@ class EventMysqlRepositoryTest {
             price = 1000,
         )
 
-        val event = Event.create(
+        val event = partner.initializeEvent(
             name = "Event Test",
             description = "Event description",
             date = Instant.now(),
-            partnerId = PartnerId().value,
             sections = mutableSetOf(section)
         )
 
+        partnerRepository.add(partner)
         eventRepository.add(event)
         entityManager.flush()
         entityManager.clear()
@@ -59,7 +68,7 @@ class EventMysqlRepositoryTest {
         Assertions.assertEquals(event.description, eventEntity.description)
         Assertions.assertEquals(event.date, eventEntity.date)
         Assertions.assertEquals(event.totalSpots, eventEntity.totalSpots)
-        Assertions.assertEquals(event.partnerId.value, eventEntity.partnerId.toString())
+        Assertions.assertEquals(event.partnerId.value, eventEntity.partner.id.toString())
         Assertions.assertEquals(event.sections.size, eventEntity.sections.size)
 
         val sectionEntity = eventEntity.sections.first()
@@ -85,13 +94,17 @@ class EventMysqlRepositoryTest {
     @Test
     @Transactional
     fun `should return a event when it is found`() {
-        val event = Event.create(
+        val partner = Partner.create(
+            name = "Test Name"
+        )
+
+        val event = partner.initializeEvent(
             name = "Event Test",
             description = "Event description",
             date = Instant.now(),
-            partnerId = PartnerId().value,
         )
 
+        partnerRepository.add(partner)
         eventRepository.add(event)
         entityManager.flush()
         entityManager.clear()
@@ -111,20 +124,23 @@ class EventMysqlRepositoryTest {
     @Test
     @Transactional
     fun `should return a list of events`() {
-        val event1 = Event.create(
+        val partner = Partner.create(
+            name = "Test Name"
+        )
+
+        val event1 = partner.initializeEvent(
             name = "Event Test One",
             description = "Event description",
             date = Instant.now(),
-            partnerId = PartnerId().value,
         )
 
-        val event2 = Event.create(
+        val event2 = partner.initializeEvent(
             name = "Event Test Two",
             description = "Event description",
             date = Instant.now(),
-            partnerId = PartnerId().value,
         )
 
+        partnerRepository.add(partner)
         eventRepository.add(event1)
         eventRepository.add(event2)
         entityManager.flush()
@@ -147,13 +163,17 @@ class EventMysqlRepositoryTest {
     @Test
     @Transactional
     fun `should delete a event when it is found`() {
-        val event = Event.create(
+        val partner = Partner.create(
+            name = "Test Name"
+        )
+
+        val event = partner.initializeEvent(
             name = "Event Test",
             description = "Event description",
             date = Instant.now(),
-            partnerId = PartnerId().value,
         )
 
+        partnerRepository.add(partner)
         eventRepository.add(event)
         entityManager.flush()
         entityManager.clear()

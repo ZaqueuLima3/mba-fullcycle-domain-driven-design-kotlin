@@ -5,6 +5,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Even
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEntity
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEntity.Companion.toDomain
+import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.PartnerEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Component
 import java.util.*
@@ -15,7 +16,8 @@ internal class EventMysqlRepository(
 ) : EventRepository {
 
     override fun add(entity: Event) {
-        entityManager.persist(EventEntity.fromDomain(entity))
+        val partner = entityManager.find(PartnerEntity::class.java, UUID.fromString(entity.partnerId.value))
+        entityManager.persist(EventEntity.fromDomain(entity, partner))
     }
 
     override fun findById(id: Uuid): Event? {
