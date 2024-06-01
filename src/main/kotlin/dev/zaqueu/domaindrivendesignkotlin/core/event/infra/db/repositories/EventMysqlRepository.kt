@@ -1,8 +1,8 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Uuid
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.Event
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.repositories.EventRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEntity
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEntity.Companion.toDomain
 import jakarta.persistence.EntityManager

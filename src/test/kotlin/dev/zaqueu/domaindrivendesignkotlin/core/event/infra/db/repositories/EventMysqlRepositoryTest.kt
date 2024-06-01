@@ -1,11 +1,11 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.Event
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.EventId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.EventSection
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.repositories.EventRepository
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.partner.PartnerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEntity
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional

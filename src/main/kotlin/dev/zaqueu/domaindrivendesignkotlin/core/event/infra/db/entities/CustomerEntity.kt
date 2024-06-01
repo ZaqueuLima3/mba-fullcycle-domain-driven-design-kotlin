@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer.Customer
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

@@ -1,9 +1,9 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer.Customer
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer.CustomerId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer.repositories.CustomerRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.CustomerEntity
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional

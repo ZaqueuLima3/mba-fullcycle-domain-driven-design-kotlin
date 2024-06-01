@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.EventSpot
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.EventSpotId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSpot
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
 import jakarta.persistence.*
 import java.util.*
 

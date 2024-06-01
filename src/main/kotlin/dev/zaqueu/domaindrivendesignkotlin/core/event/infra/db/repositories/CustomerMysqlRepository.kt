@@ -1,8 +1,8 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Uuid
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer.Customer
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer.repositories.CustomerRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.CustomerEntity
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.CustomerEntity.Companion.toDomain
 import jakarta.persistence.EntityManager

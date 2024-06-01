@@ -1,6 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.event.Event
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventSectionEntity.Companion.toDomain
 import jakarta.persistence.*
 import java.time.Instant

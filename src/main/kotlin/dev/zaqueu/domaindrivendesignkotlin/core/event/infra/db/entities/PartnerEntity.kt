@@ -1,6 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.partner.Partner
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
