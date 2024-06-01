@@ -1,4 +1,4 @@
-package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entity.customer
+package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.entities.customer.Customer
