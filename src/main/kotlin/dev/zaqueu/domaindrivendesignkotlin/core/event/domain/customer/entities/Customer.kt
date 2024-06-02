@@ -6,7 +6,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobjec
 
 internal data class Customer(
     override val id: CustomerId,
-    val name: String,
+    var name: String,
     val cpf: Cpf,
 ) : AggregateRoot() {
 
@@ -19,6 +19,10 @@ internal data class Customer(
         name = name,
         cpf = cpf,
     )
+
+    fun changeName(name: String) {
+        this.name = name
+    }
 
     companion object {
         fun create(name: String, cpf: String): Customer {

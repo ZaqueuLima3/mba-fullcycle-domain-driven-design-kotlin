@@ -33,13 +33,24 @@ dependencies {
     // mysql
     runtimeOnly("com.mysql:mysql-connector-j")
 
-    // tests
+    // tests ----------------
+
+    // database
     testRuntimeOnly("com.h2database:h2")
+
+    // spring
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // junit
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // test container
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
+
+    // mockk
+    testImplementation("io.mockk:mockk:1.13.11")
 }
 
 tasks.withType<KotlinCompile> {
