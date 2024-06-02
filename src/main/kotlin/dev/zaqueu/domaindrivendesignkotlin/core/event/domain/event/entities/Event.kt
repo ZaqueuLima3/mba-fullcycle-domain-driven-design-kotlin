@@ -3,6 +3,8 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.AggregateRoot
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSectionId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import java.time.Instant
 
@@ -87,6 +89,31 @@ internal class Event(
         )
 
         _sections.add(section)
+    }
+
+    fun changeSectionInformation(
+        sectionId: EventSectionId,
+        name: String?,
+        description: String?,
+        price: Long?,
+    ) {
+        val section = _sections.find { it.id == sectionId }
+            ?: throw Exception("Section not found")
+
+        if (name != null) section.changeName(name)
+        if (description != null) section.changeDescription(description)
+        if (price != null) section.changePrice(price)
+    }
+
+    fun changeSpotLocation(
+        sectionId: EventSectionId,
+        spotId: EventSpotId,
+        location: String,
+    ) {
+        val section = _sections.find { it.id == sectionId }
+            ?: throw Exception("Section not found")
+
+        section.changeSpotLocation(spotId, location)
     }
 
     companion object {

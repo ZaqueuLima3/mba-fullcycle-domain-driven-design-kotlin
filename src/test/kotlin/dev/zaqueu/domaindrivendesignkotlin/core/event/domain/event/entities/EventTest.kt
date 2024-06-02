@@ -248,4 +248,89 @@ class EventTest {
         Assertions.assertFalse(sections.all { it.isPublished })
         Assertions.assertFalse(sections.all { s -> s.spots.all { it.isPublished } })
     }
+
+    @Test
+    fun `should change a section information`() {
+        val expectedName = "First Event"
+        val expectedDescription = "some description"
+        val expectedDate = Instant.now()
+        val expectedPartnerId = PartnerId()
+
+        val expectedSectionName = "Section one"
+        val expectedSectionDescription = "Some section description"
+        val expectedSectionTotalSpots = 10L
+        val expectedSectionPrice = 1000L
+
+        val expectedUpdateName = "Section Name"
+        val expectedUpdateDescription = "New Description"
+        val expectedUpdatePrice = 100L
+
+        val event = Event.create(
+            name = expectedName,
+            description = expectedDescription,
+            date = expectedDate,
+            partnerId = expectedPartnerId.value,
+        )
+
+        event.addSection(
+            name = expectedSectionName,
+            description = expectedSectionDescription,
+            totalSpots = expectedSectionTotalSpots,
+            price = expectedSectionPrice,
+        )
+
+        event.changeSectionInformation(
+            sectionId = event.sections.first().id,
+            name = expectedUpdateName,
+            description = expectedUpdateDescription,
+            price = expectedUpdatePrice,
+        )
+
+        val section = event.sections.first()
+
+        Assertions.assertEquals(expectedUpdateName, section.name)
+        Assertions.assertEquals(expectedUpdateDescription, section.description)
+        Assertions.assertEquals(expectedUpdatePrice, section.price)
+    }
+
+    @Test
+    fun `should change a spot location`() {
+        val expectedName = "First Event"
+        val expectedDescription = "some description"
+        val expectedDate = Instant.now()
+        val expectedPartnerId = PartnerId()
+
+        val expectedSectionName = "Section one"
+        val expectedSectionDescription = "Some section description"
+        val expectedSectionTotalSpots = 1L
+        val expectedSectionPrice = 1000L
+
+        val expectedUpdateLocation = "A1:11"
+
+        val event = Event.create(
+            name = expectedName,
+            description = expectedDescription,
+            date = expectedDate,
+            partnerId = expectedPartnerId.value,
+        )
+
+        event.addSection(
+            name = expectedSectionName,
+            description = expectedSectionDescription,
+            totalSpots = expectedSectionTotalSpots,
+            price = expectedSectionPrice,
+        )
+
+        val section = event.sections.first()
+
+        event.changeSpotLocation(
+            sectionId = section.id,
+            spotId = section.spots.first().id,
+            location = expectedUpdateLocation,
+        )
+
+        val spot = section.spots.first()
+
+        Assertions.assertEquals(expectedUpdateLocation, spot.location)
+    }
 }

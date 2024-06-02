@@ -3,6 +3,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.Entity
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSectionId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
 
 internal class EventSection(
     override val id: EventSectionId,
@@ -81,6 +82,13 @@ internal class EventSection(
 
     fun unPublish() {
         this.isPublished = false
+    }
+
+    fun changeSpotLocation(spotId: EventSpotId, location: String) {
+        val spot = _spots.find { it.id == spotId }
+            ?: throw Exception("Spot not found")
+
+        spot.changeLocation(location)
     }
 
     companion object {
