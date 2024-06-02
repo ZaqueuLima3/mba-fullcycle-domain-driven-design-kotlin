@@ -73,7 +73,7 @@ class EventTest {
     }
 
     @Test
-    fun `should create an event with sections`() {
+    fun `should add sections to a new event`() {
         val expectedName = "First Event"
         val expectedDescription = "some description"
         val expectedDate = Instant.now()
@@ -97,8 +97,9 @@ class EventTest {
             description = expectedDescription,
             date = expectedDate,
             partnerId = expectedPartnerId.value,
-            sections = mutableSetOf(section)
         )
+
+        event.addSections(mutableSetOf(section))
 
         Assertions.assertEquals(expectedTotalOfSections, event.sections.size)
         Assertions.assertEquals(expectedSectionTotalSpots, event.totalSpots)
@@ -227,8 +228,9 @@ class EventTest {
             description = expectedDescription,
             date = expectedDate,
             partnerId = expectedPartnerId.value,
-            sections = mutableSetOf(section1, section2)
         )
+
+        event.addSections(mutableSetOf(section1, section2))
 
         val sections = event.sections
 

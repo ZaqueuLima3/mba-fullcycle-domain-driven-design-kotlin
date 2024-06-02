@@ -57,7 +57,7 @@ internal class EventEntity(
         }
 
         fun EventEntity.toDomain(): Event {
-            return Event(
+            val event = Event(
                 id = id.toString(),
                 name = name,
                 description = description,
@@ -65,8 +65,11 @@ internal class EventEntity(
                 isPublished = isPublished,
                 totalSpotsReserved = totalSpotsReserved,
                 partnerId = partner.id.toString(),
-                sections = sections.map { it.toDomain() }.toSet()
             )
+
+            event.addSections(sections.map { it.toDomain() }.toSet())
+
+            return event
         }
     }
 }

@@ -28,7 +28,6 @@ internal class Event(
         isPublished: Boolean,
         totalSpotsReserved: Long,
         partnerId: String,
-        sections: Set<EventSection>,
     ) : this(
         id = if (id != null) EventId(id) else EventId(),
         name = name,
@@ -37,9 +36,7 @@ internal class Event(
         isPublished = isPublished,
         totalSpotsReserved = totalSpotsReserved,
         partnerId = PartnerId(partnerId),
-    ) {
-        this._sections.addAll(sections)
-    }
+    )
 
     fun changeName(name: String) {
         this.name = name
@@ -71,6 +68,10 @@ internal class Event(
         this.isPublished = false
     }
 
+    fun addSections(sections: Set<EventSection>) {
+        this._sections.addAll(sections)
+    }
+
     fun addSection(
         name: String,
         description: String?,
@@ -93,7 +94,6 @@ internal class Event(
             description: String?,
             date: Instant,
             partnerId: String,
-            sections: Set<EventSection> = emptySet(),
         ): Event {
             return Event(
                 name = name,
@@ -102,7 +102,6 @@ internal class Event(
                 isPublished = false,
                 totalSpotsReserved = 0,
                 partnerId = partnerId,
-                sections = sections,
             )
         }
     }

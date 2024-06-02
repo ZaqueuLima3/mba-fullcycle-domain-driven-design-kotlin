@@ -20,13 +20,16 @@ internal data class Partner(
     )
 
     fun initializeEvent(name: String, description: String, date: Instant, sections: Set<EventSection> = emptySet()): Event {
-        return Event.create(
+        val event = Event.create(
             name = name,
             description = description,
             date = date,
             partnerId = id.value,
-            sections = sections,
         )
+
+        event.addSections(sections)
+
+        return event
     }
 
     fun changeName(name: String) {
