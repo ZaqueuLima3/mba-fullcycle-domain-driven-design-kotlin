@@ -8,7 +8,6 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEnt
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.PartnerEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 internal class EventMysqlRepository(
@@ -16,12 +15,12 @@ internal class EventMysqlRepository(
 ) : EventRepository {
 
     override fun add(entity: Event) {
-        val partner = entityManager.find(PartnerEntity::class.java, UUID.fromString(entity.partnerId.value))
+        val partner = entityManager.find(PartnerEntity::class.java, entity.partnerId.toUUID())
         entityManager.persist(EventEntity.fromDomain(entity, partner))
     }
 
     override fun findById(id: Uuid): Event? {
-        val entity = entityManager.find(EventEntity::class.java, UUID.fromString(id.value))
+        val entity = entityManager.find(EventEntity::class.java, id.toUUID())
         return entity?.toDomain()
     }
 
@@ -32,7 +31,7 @@ internal class EventMysqlRepository(
     }
 
     override fun delete(id: Uuid) {
-        val partnerEntity = entityManager.find(EventEntity::class.java, UUID.fromString(id.value))
+        val partnerEntity = entityManager.find(EventEntity::class.java, id.toUUID())
         partnerEntity?.let { entityManager.remove(it) }
     }
 }

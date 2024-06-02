@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.AggregateRoot
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.toEventId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import java.time.Instant
 
@@ -29,7 +30,7 @@ internal class Event(
         totalSpotsReserved: Long,
         partnerId: String,
     ) : this(
-        id = if (id != null) EventId(id) else EventId(),
+        id = id.toEventId(),
         name = name,
         description = description,
         date = date,
