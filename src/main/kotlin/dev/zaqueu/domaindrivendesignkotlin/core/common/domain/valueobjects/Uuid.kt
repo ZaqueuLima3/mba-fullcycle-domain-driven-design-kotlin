@@ -31,8 +31,7 @@ internal inline fun <reified T : Uuid> UUID.toDomainUuid(): T = mountClass(this.
 internal inline fun <reified T : Uuid> String?.toDomainUuid(): T = mountClass(this)
 
 private inline fun <reified T : Uuid> mountClass(value: String?): T {
-    val constructor = T::class.primaryConstructor ?: T::class.constructors.firstOrNull()
-    ?: throw IllegalArgumentException("No suitable constructors found for ${T::class}")
+    val constructor = T::class.primaryConstructor ?: T::class.constructors.first()
 
     return try {
         constructor.call(value)

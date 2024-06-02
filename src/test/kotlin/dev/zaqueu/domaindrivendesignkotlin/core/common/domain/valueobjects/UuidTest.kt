@@ -3,7 +3,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects
 import dev.zaqueu.domaindrivendesignkotlin.core.event.exceptions.InvalidArgumentException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 
 internal class MockId(value: String? = null) : Uuid(value)
 
@@ -60,5 +60,17 @@ class UuidTest {
         Assertions.assertDoesNotThrow {
             UUID.fromString(mockId.value)
         }
+    }
+
+    @Test
+    fun `should throws an exception when do not specify the id type`() {
+        val id = UUID.randomUUID()
+        val expectedErrorMessage = "Failed to create instance of ${Uuid::class} with value '$id'"
+
+        val actualException = Assertions.assertThrows(IllegalArgumentException::class.java) {
+            id.toDomainUuid<Uuid>()
+        }
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.message)
     }
 }
