@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSpot
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
 import jakarta.persistence.*
 import java.util.*
 
@@ -37,7 +37,7 @@ internal class EventSpotEntity(
 
         fun EventSpotEntity.toDomain(): EventSpot {
             return EventSpot(
-                id = EventSpotId(id.toString()),
+                id = id.toDomainUuid(),
                 location = location,
                 isReserved = isReserved,
                 isPublished = isPublished,

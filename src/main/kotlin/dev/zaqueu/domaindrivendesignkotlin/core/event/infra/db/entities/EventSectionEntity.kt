@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSectionId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventSpotEntity.Companion.toDomain
 import jakarta.persistence.*
 import java.util.*
@@ -60,7 +60,7 @@ internal class EventSectionEntity(
 
         fun EventSectionEntity.toDomain(): EventSection {
             val section = EventSection(
-                id = EventSectionId(id.toString()),
+                id = id.toDomainUuid(),
                 name = name,
                 description = description,
                 isPublished = isPublished,

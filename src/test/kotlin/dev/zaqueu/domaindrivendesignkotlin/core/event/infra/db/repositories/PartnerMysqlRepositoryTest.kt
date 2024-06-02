@@ -1,22 +1,21 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.PartnerEntity
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.util.UUID
+import java.util.*
 
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
@@ -64,7 +63,7 @@ class PartnerMysqlRepositoryTest {
 
     @Test
     fun `should return null when partner is no found`() {
-        val savedPartner = partnerRepository.findById(UUID.randomUUID().toPartnerId())
+        val savedPartner = partnerRepository.findById(UUID.randomUUID().toDomainUuid<PartnerId>())
         Assertions.assertNull(savedPartner)
     }
 
@@ -122,7 +121,7 @@ class PartnerMysqlRepositoryTest {
     @Test
     fun `should do nothing when doesn't find a partner to delete`() {
         Assertions.assertDoesNotThrow {
-            partnerRepository.delete(UUID.randomUUID().toPartnerId())
+            partnerRepository.delete(UUID.randomUUID().toDomainUuid<PartnerId>())
         }
     }
 }

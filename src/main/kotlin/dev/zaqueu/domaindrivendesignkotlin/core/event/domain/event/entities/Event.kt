@@ -1,10 +1,9 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.AggregateRoot
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.toEventId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import java.time.Instant
 
 internal class Event(
@@ -31,13 +30,13 @@ internal class Event(
         totalSpotsReserved: Long,
         partnerId: String,
     ) : this(
-        id = id.toEventId(),
+        id = id.toDomainUuid(),
         name = name,
         description = description,
         date = date,
         isPublished = isPublished,
         totalSpotsReserved = totalSpotsReserved,
-        partnerId = partnerId.toPartnerId(),
+        partnerId = partnerId.toDomainUuid(),
     )
 
     fun changeName(name: String) {

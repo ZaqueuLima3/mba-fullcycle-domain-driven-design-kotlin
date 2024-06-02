@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities
 
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -38,7 +38,7 @@ class PartnerTest {
 
     @Test
     fun `should create a Partner with a PartnerId`() {
-        val expectedId = UUID.randomUUID().toPartnerId()
+        val expectedId = UUID.randomUUID().toDomainUuid<PartnerId>()
         val expectedName = "Disney"
 
         val partner = Partner(

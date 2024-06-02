@@ -39,4 +39,26 @@ class UuidTest {
 
         Assertions.assertEquals(expectedErrorMessage, actualException.message)
     }
+
+    @Test
+    fun `should convert a string to a valid uuid vo`() {
+        val id = UUID.randomUUID().toString()
+
+        val mockId: MockId = id.toDomainUuid()
+
+        Assertions.assertEquals(id, mockId.value)
+    }
+
+    @Test
+    fun `should create a uuid vo from a null string`() {
+        val id = null
+
+        val mockId: MockId = id.toDomainUuid()
+
+        Assertions.assertNotNull(mockId.value)
+
+        Assertions.assertDoesNotThrow {
+            UUID.fromString(mockId.value)
+        }
+    }
 }

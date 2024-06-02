@@ -1,6 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.Entity
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSectionId
 
 internal class EventSection(
@@ -26,7 +27,7 @@ internal class EventSection(
         totalSpots: Long,
         price: Long,
     ) : this(
-        id = if (id != null) EventSectionId(id) else EventSectionId(),
+        id = id.toDomainUuid(),
         name = name,
         description = description,
         isPublished = isPublished,

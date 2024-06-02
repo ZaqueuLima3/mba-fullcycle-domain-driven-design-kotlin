@@ -1,9 +1,10 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.toEventId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventEntity
@@ -115,7 +116,7 @@ class EventMysqlRepositoryTest {
 
     @Test
     fun `should return null when event is no found`() {
-        val savedEvent = eventRepository.findById(UUID.randomUUID().toEventId())
+        val savedEvent = eventRepository.findById(UUID.randomUUID().toDomainUuid<EventId>())
         Assertions.assertNull(savedEvent)
     }
 
@@ -190,7 +191,7 @@ class EventMysqlRepositoryTest {
     @Test
     fun `should do nothing when doesn't find a event to delete`() {
         Assertions.assertDoesNotThrow {
-            eventRepository.delete(UUID.randomUUID().toEventId())
+            eventRepository.delete(UUID.randomUUID().toDomainUuid<EventId>())
         }
     }
 }

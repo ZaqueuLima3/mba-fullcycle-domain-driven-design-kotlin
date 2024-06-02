@@ -1,11 +1,11 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.toCustomerId
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 
 class CustomerTest {
     @Test
@@ -44,7 +44,7 @@ class CustomerTest {
 
     @Test
     fun `should create a Customer with a CustomerId`() {
-        val expectedId = UUID.randomUUID().toCustomerId()
+        val expectedId: CustomerId = UUID.randomUUID().toDomainUuid()
         val expectedName = "Jhon Doe"
         val expectedCpf = Cpf.create("93928642057")
 

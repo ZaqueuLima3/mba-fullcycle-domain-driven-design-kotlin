@@ -1,17 +1,14 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.services
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
-import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.CreateEventDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.UpdateEventDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.toEventId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Assertions
@@ -102,7 +99,7 @@ class EventServiceTest {
 
     @Test
     fun `should register a new event`() {
-        val expectedPartnerId = UUID.randomUUID().toPartnerId()
+        val expectedPartnerId = UUID.randomUUID().toDomainUuid<PartnerId>()
 
         val partner = Partner(
             id = expectedPartnerId,

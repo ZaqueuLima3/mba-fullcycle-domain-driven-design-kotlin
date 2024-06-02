@@ -1,6 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.Entity
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
 
 internal data class EventSpot(
@@ -16,7 +17,7 @@ internal data class EventSpot(
         isPublished: Boolean,
         isReserved: Boolean,
     ) : this(
-        id = if (id != null) EventSpotId(id) else EventSpotId(),
+        id = id.toDomainUuid(),
         location = location,
         isPublished = isPublished,
         isReserved = isReserved,

@@ -1,10 +1,10 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.AggregateRoot
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import java.time.Instant
 
 internal data class Partner(
@@ -16,7 +16,7 @@ internal data class Partner(
         id: String? = null,
         name: String,
     ) : this(
-        id = id.toPartnerId(),
+        id = id.toDomainUuid(),
         name = name,
     )
 
