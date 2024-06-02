@@ -1,4 +1,4 @@
-package dev.zaqueu.domaindrivendesignkotlin.core.event.application.services
+package dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.services
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
