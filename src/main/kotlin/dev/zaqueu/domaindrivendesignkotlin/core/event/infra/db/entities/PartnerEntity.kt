@@ -18,7 +18,7 @@ internal class PartnerEntity(
     companion object {
         fun fromDomain(partner: Partner): PartnerEntity {
             return PartnerEntity(
-                id = UUID.fromString(partner.id.value),
+                id = partner.id.toUUID(),
                 name = partner.name,
             )
         }

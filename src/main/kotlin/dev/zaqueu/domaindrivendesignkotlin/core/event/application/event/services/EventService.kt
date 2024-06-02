@@ -9,6 +9,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.toEventId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import org.springframework.stereotype.Service
 
 @Service
@@ -28,7 +29,7 @@ internal class EventService(
     }
 
     fun create(input: CreateEventDto): Event {
-        val partner = partnerRepository.findById(PartnerId(input.partnerId)) ?: throw Exception("Partner not found")
+        val partner = partnerRepository.findById(input.partnerId.toPartnerId()) ?: throw Exception("Partner not found")
 
         val event = partner.initializeEvent(
             name = input.name,

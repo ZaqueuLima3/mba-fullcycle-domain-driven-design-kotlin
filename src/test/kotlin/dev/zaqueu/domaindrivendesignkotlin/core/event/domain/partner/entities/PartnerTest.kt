@@ -1,6 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -16,7 +17,7 @@ class PartnerTest {
         )
 
         Assertions.assertNotNull(partner.id)
-        Assertions.assertDoesNotThrow { UUID.fromString(partner.id.value) }
+        Assertions.assertDoesNotThrow { partner.id.toUUID() }
         Assertions.assertInstanceOf(PartnerId::class.java, partner.id)
         Assertions.assertEquals(expectedName, partner.name)
     }
@@ -37,7 +38,7 @@ class PartnerTest {
 
     @Test
     fun `should create a Partner with a PartnerId`() {
-        val expectedId = PartnerId(UUID.randomUUID().toString())
+        val expectedId = UUID.randomUUID().toPartnerId()
         val expectedName = "Disney"
 
         val partner = Partner(

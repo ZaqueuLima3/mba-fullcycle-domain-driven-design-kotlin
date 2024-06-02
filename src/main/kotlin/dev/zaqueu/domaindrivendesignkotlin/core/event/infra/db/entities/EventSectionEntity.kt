@@ -41,7 +41,7 @@ internal class EventSectionEntity(
     companion object {
         fun fromDomain(eventSection: EventSection, event: EventEntity): EventSectionEntity {
             val sectionEventEntity = EventSectionEntity(
-                id = UUID.fromString(eventSection.id.value),
+                id = eventSection.id.toUUID(),
                 name = eventSection.name,
                 description = eventSection.description,
                 isPublished = eventSection.isPublished,

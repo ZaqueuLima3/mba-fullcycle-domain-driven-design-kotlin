@@ -4,6 +4,7 @@ import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.PartnerEntity
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
@@ -40,7 +41,7 @@ class PartnerMysqlRepositoryTest {
         entityManager.flush()
         entityManager.clear()
 
-        val partnerEntity = entityManager.find(PartnerEntity::class.java, UUID.fromString(partner.id.value))
+        val partnerEntity = entityManager.find(PartnerEntity::class.java, partner.id.toUUID())
         Assertions.assertNotNull(partnerEntity)
         Assertions.assertEquals(partner.name, partnerEntity.name)
     }
@@ -63,7 +64,7 @@ class PartnerMysqlRepositoryTest {
 
     @Test
     fun `should return null when partner is no found`() {
-        val savedPartner = partnerRepository.findById(PartnerId(UUID.randomUUID().toString()))
+        val savedPartner = partnerRepository.findById(UUID.randomUUID().toPartnerId())
         Assertions.assertNull(savedPartner)
     }
 
@@ -107,13 +108,13 @@ class PartnerMysqlRepositoryTest {
         entityManager.flush()
         entityManager.clear()
 
-        val savedPartner = entityManager.find(PartnerEntity::class.java, UUID.fromString(partner.id.value))
+        val savedPartner = entityManager.find(PartnerEntity::class.java, partner.id.toUUID())
         Assertions.assertNotNull(savedPartner)
         Assertions.assertEquals(partner.name, savedPartner?.name)
 
         partnerRepository.delete(partner.id)
 
-        val deletedPartner = entityManager.find(PartnerEntity::class.java, UUID.fromString(partner.id.value))
+        val deletedPartner = entityManager.find(PartnerEntity::class.java, partner.id.toUUID())
 
         Assertions.assertNull(deletedPartner)
     }
@@ -121,7 +122,7 @@ class PartnerMysqlRepositoryTest {
     @Test
     fun `should do nothing when doesn't find a partner to delete`() {
         Assertions.assertDoesNotThrow {
-            partnerRepository.delete(PartnerId(UUID.randomUUID().toString()))
+            partnerRepository.delete(UUID.randomUUID().toPartnerId())
         }
     }
 }

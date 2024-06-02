@@ -10,7 +10,11 @@ internal abstract class Uuid(value: String?) : ValueObject<String>(value ?: UUID
         validate()
     }
 
-    internal fun toUUID() = UUID.fromString(this.value)
+    fun toUUID(): UUID = UUID.fromString(this.value)
+
+    override fun toString(): String {
+        return this.value
+    }
 
     private fun validate() {
         try {

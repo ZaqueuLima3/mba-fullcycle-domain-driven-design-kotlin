@@ -4,6 +4,7 @@ import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.toCustomerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.CustomerEntity
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
@@ -41,7 +42,7 @@ class CustomerMysqlRepositoryTest {
         entityManager.flush()
         entityManager.clear()
 
-        val customerEntity = entityManager.find(CustomerEntity::class.java, UUID.fromString(customer.id.value))
+        val customerEntity = entityManager.find(CustomerEntity::class.java, customer.id.toUUID())
         Assertions.assertNotNull(customerEntity)
         Assertions.assertEquals(customer.name, customerEntity.name)
     }
@@ -87,7 +88,7 @@ class CustomerMysqlRepositoryTest {
 
     @Test
     fun `should return null when customer is no found`() {
-        val savedCustomer = customerRepository.findById(CustomerId(UUID.randomUUID().toString()))
+        val savedCustomer = customerRepository.findById(UUID.randomUUID().toCustomerId())
         Assertions.assertNull(savedCustomer)
     }
 
@@ -133,13 +134,13 @@ class CustomerMysqlRepositoryTest {
         entityManager.flush()
         entityManager.clear()
 
-        val savedCustomer = entityManager.find(CustomerEntity::class.java, UUID.fromString(customer.id.value))
+        val savedCustomer = entityManager.find(CustomerEntity::class.java, customer.id.toUUID())
         Assertions.assertNotNull(savedCustomer)
         Assertions.assertEquals(customer.name, savedCustomer?.name)
 
         customerRepository.delete(customer.id)
 
-        val deletedCustomer = entityManager.find(CustomerEntity::class.java, UUID.fromString(customer.id.value))
+        val deletedCustomer = entityManager.find(CustomerEntity::class.java, customer.id.toUUID())
 
         Assertions.assertNull(deletedCustomer)
     }
@@ -147,7 +148,7 @@ class CustomerMysqlRepositoryTest {
     @Test
     fun `should do nothing when doesn't find a customer to delete`() {
         Assertions.assertDoesNotThrow {
-            customerRepository.delete(CustomerId(UUID.randomUUID().toString()))
+            customerRepository.delete(UUID.randomUUID().toCustomerId())
         }
     }
 }

@@ -11,6 +11,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.t
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Assertions
@@ -101,10 +102,10 @@ class EventServiceTest {
 
     @Test
     fun `should register a new event`() {
-        val expectedPartnerId = UUID.randomUUID().toString()
+        val expectedPartnerId = UUID.randomUUID().toPartnerId()
 
         val partner = Partner(
-            id = PartnerId(expectedPartnerId),
+            id = expectedPartnerId,
             name = "Disney",
         )
 
@@ -112,7 +113,7 @@ class EventServiceTest {
             name = "Event name",
             description = "some description",
             date = Instant.now(),
-            partnerId = expectedPartnerId,
+            partnerId = expectedPartnerId.value,
         )
 
         every {

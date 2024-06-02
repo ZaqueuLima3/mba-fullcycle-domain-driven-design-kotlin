@@ -19,7 +19,7 @@ internal class CustomerMysqlRepository(
     }
 
     override fun findById(id: Uuid): Customer? {
-        val entity = entityManager.find(CustomerEntity::class.java, UUID.fromString(id.value))
+        val entity = entityManager.find(CustomerEntity::class.java, id.toUUID())
         return entity?.toDomain()
     }
 
@@ -30,7 +30,7 @@ internal class CustomerMysqlRepository(
     }
 
     override fun delete(id: Uuid) {
-        val partnerEntity = entityManager.find(CustomerEntity::class.java, UUID.fromString(id.value))
+        val partnerEntity = entityManager.find(CustomerEntity::class.java, id.toUUID())
         partnerEntity?.let { entityManager.remove(it) }
     }
 }

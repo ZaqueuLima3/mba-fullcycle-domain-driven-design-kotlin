@@ -41,7 +41,7 @@ internal class EventEntity(
     companion object {
         fun fromDomain(event: Event, partner: PartnerEntity): EventEntity {
             val eventEntity = EventEntity(
-                id = UUID.fromString(event.id.value),
+                id = event.id.toUUID(),
                 name = event.name,
                 description = event.description,
                 date = event.date,

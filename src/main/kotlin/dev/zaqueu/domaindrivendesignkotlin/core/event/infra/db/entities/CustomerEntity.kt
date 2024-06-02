@@ -20,7 +20,7 @@ internal class CustomerEntity(
     companion object {
         fun fromDomain(customer: Customer): CustomerEntity {
             return CustomerEntity(
-                id = UUID.fromString(customer.id.value),
+                id = customer.id.toUUID(),
                 name = customer.name,
                 cpf = customer.cpf.value,
             )

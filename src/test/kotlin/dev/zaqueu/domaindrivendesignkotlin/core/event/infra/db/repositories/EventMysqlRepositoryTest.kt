@@ -60,7 +60,7 @@ class EventMysqlRepositoryTest {
         entityManager.flush()
         entityManager.clear()
 
-        val eventEntity = entityManager.find(EventEntity::class.java, UUID.fromString(event.id.value))
+        val eventEntity = entityManager.find(EventEntity::class.java, event.id.toUUID())
         Assertions.assertNotNull(eventEntity)
         Assertions.assertEquals(event.name, eventEntity.name)
         Assertions.assertEquals(event.description, eventEntity.description)
@@ -176,13 +176,13 @@ class EventMysqlRepositoryTest {
         entityManager.flush()
         entityManager.clear()
 
-        val savedEvent = entityManager.find(EventEntity::class.java, UUID.fromString(event.id.value))
+        val savedEvent = entityManager.find(EventEntity::class.java, event.id.toUUID())
         Assertions.assertNotNull(savedEvent)
         Assertions.assertEquals(event.name, savedEvent?.name)
 
         eventRepository.delete(event.id)
 
-        val deletedEvent = entityManager.find(EventEntity::class.java, UUID.fromString(event.id.value))
+        val deletedEvent = entityManager.find(EventEntity::class.java, event.id.toUUID())
 
         Assertions.assertNull(deletedEvent)
     }

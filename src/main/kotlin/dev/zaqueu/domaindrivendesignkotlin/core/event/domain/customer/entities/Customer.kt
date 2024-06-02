@@ -3,6 +3,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.AggregateRoot
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.toCustomerId
 
 internal data class Customer(
     override val id: CustomerId,
@@ -15,7 +16,7 @@ internal data class Customer(
         name: String,
         cpf: Cpf,
     ) : this(
-        id = if (id != null) CustomerId(id) else CustomerId(),
+        id = id.toCustomerId(),
         name = name,
         cpf = cpf,
     )

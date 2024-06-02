@@ -7,6 +7,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.Up
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.toPartnerId
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,7 +27,7 @@ internal class PartnerService(
     }
 
     fun update(input: UpdatePartnerDto): Partner {
-        val partner = partnerRepository.findById(PartnerId(input.id)) ?: throw Exception("Partner not found")
+        val partner = partnerRepository.findById(input.id.toPartnerId()) ?: throw Exception("Partner not found")
 
         if (!input.name.isNullOrBlank()) partner.changeName(input.name)
 

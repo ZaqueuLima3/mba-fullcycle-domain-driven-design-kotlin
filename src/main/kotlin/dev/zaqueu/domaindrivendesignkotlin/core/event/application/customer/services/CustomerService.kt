@@ -7,6 +7,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.U
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.toCustomerId
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,7 +27,7 @@ internal class CustomerService(
     }
 
     fun update(input: UpdateCustomerDto): Customer {
-        val customer = customerRepository.findById(CustomerId(input.id)) ?: throw Exception("Customer not found")
+        val customer = customerRepository.findById(input.id.toCustomerId()) ?: throw Exception("Customer not found")
 
         if (!input.name.isNullOrBlank()) customer.changeName(input.name)
 

@@ -27,7 +27,7 @@ internal class EventSpotEntity(
     companion object {
         fun fromDomain(eventSpot: EventSpot, eventSection: EventSectionEntity): EventSpotEntity {
             return EventSpotEntity(
-                id = UUID.fromString(eventSpot.id.value),
+                id = eventSpot.id.toUUID(),
                 location = eventSpot.location,
                 isReserved = eventSpot.isReserved,
                 isPublished = eventSpot.isPublished,
