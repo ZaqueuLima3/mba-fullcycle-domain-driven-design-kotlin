@@ -1,4 +1,4 @@
-package dev.zaqueu.domaindrivendesignkotlin.core.event.application.dto
+package dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto
 
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 

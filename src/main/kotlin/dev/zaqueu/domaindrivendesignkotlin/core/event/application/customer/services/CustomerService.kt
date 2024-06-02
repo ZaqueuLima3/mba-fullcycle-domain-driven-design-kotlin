@@ -1,9 +1,9 @@
-package dev.zaqueu.domaindrivendesignkotlin.core.event.application.services
+package dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.services
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.dto.CreateCustomerDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.dto.CreateCustomerDto.Companion.toDomain
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.dto.UpdateCustomerDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.CreateCustomerDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.CreateCustomerDto.Companion.toDomain
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.UpdateCustomerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId

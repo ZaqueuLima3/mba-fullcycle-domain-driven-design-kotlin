@@ -2,8 +2,9 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.application.services
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.dto.CreateCustomerDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.dto.UpdateCustomerDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.CreateCustomerDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.UpdateCustomerDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.services.CustomerService
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import io.mockk.*
