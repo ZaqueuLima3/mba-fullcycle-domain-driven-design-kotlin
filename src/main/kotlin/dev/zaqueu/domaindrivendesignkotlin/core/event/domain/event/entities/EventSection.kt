@@ -48,6 +48,10 @@ internal class EventSection(
         totalSpots += 1
     }
 
+    fun getSpot(spotId: EventSpotId): EventSpot? {
+        return this.spots.firstOrNull { it.id == spotId }
+    }
+
     private fun initializeSpots() {
         for (i in 1..totalSpots) {
             _spots.add(EventSpot.create())
@@ -85,10 +89,28 @@ internal class EventSection(
     }
 
     fun changeSpotLocation(spotId: EventSpotId, location: String) {
-        val spot = _spots.find { it.id == spotId }
+        val spot = getSpot(spotId)
             ?: throw Exception("Spot not found")
 
         spot.changeLocation(location)
+    }
+
+    fun allowReserveSpot(
+        spotId: EventSpotId
+    ): Boolean {
+        if (!this.isPublished) return false
+
+        val spot = getSpot(spotId)
+            ?: throw Exception("Spot not found")
+
+        return spot.allowReserveSpot()
+    }
+
+    fun reserveSpot(spotId: EventSpotId) {
+        val spot = getSpot(spotId)
+            ?: throw Exception("Spot not found")
+
+        spot.reserve()
     }
 
     companion object {

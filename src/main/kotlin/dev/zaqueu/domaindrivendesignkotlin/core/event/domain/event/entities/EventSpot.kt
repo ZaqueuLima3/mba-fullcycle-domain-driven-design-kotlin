@@ -7,7 +7,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.E
 internal data class EventSpot(
     override val id: EventSpotId,
     var location: String?,
-    val isReserved: Boolean,
+    var isReserved: Boolean,
     var isPublished: Boolean,
 ) : Entity() {
 
@@ -27,12 +27,20 @@ internal data class EventSpot(
         this.location = location
     }
 
+    fun reserve() {
+        this.isReserved = true
+    }
+
     fun publish() {
         this.isPublished = true
     }
 
     fun unPublish() {
         this.isPublished = false
+    }
+
+    fun allowReserveSpot(): Boolean {
+        return !this.isReserved && this.isPublished
     }
 
     companion object {

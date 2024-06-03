@@ -1,9 +1,11 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSpot
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class EventSectionTest {
     @Test
@@ -130,5 +132,129 @@ class EventSectionTest {
 
         section.addSpots(mutableSetOf(EventSpot.create()))
         Assertions.assertEquals(expectedSectionTotalSpots +1, section.totalSpots)
+    }
+
+    @Test
+    fun `should return a spot`() {
+        val expectedSectionName = "Section one"
+        val expectedSectionDescription = "Some section description"
+        val expectedSectionTotalSpots = 10L
+        val expectedSectionPrice = 1000L
+
+        val section = EventSection.create(
+            name = expectedSectionName,
+            description = expectedSectionDescription,
+            totalSpots = expectedSectionTotalSpots,
+            price = expectedSectionPrice,
+        )
+        val spot = EventSpot.create()
+
+        section.addSpot(spot)
+
+        val spotFound = section.getSpot(spot.id)
+
+        Assertions.assertEquals(spot.id, spotFound?.id)
+    }
+
+    @Test
+    fun `should not allow reservation if the section is not published`() {
+        val spot = EventSpot.create()
+        val section = EventSection.create(
+            name = "section",
+            description = "description",
+            totalSpots = 1,
+            price = 1000,
+        )
+        section.addSpot(spot)
+        section.unPublish()
+
+        val allowReservation = section.allowReserveSpot(spot.id)
+        Assertions.assertFalse(allowReservation)
+    }
+
+    @Test
+    fun `should not allow reservation if the spot returns false`() {
+        val spot = EventSpot.create()
+        spot.reserve()
+        val section = EventSection.create(
+            name = "section",
+            description = "description",
+            totalSpots = 1,
+            price = 1000,
+        )
+        section.addSpot(spot)
+        section.publish()
+
+        val allowReservation = section.allowReserveSpot(spot.id)
+        Assertions.assertFalse(allowReservation)
+    }
+
+    @Test
+    fun `should allow reservation if the spot returns true and it is published`() {
+        val spot = EventSpot.create()
+        val section = EventSection.create(
+            name = "section",
+            description = "description",
+            totalSpots = 1,
+            price = 1000,
+        )
+        section.addSpot(spot)
+        section.publishAll()
+
+        val allowReservation = section.allowReserveSpot(spot.id)
+        Assertions.assertTrue(allowReservation)
+    }
+
+    @Test
+    fun `should throws an exception if spot do not exist`() {
+        val expectedErrorMessage = "Spot not found"
+        val section = EventSection.create(
+            name = "section",
+            description = "description",
+            totalSpots = 1,
+            price = 1000,
+        )
+        section.publish()
+
+        val actualException = Assertions.assertThrows(Exception::class.java) {
+            section.allowReserveSpot(UUID.randomUUID().toDomainUuid())
+        }
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.message)
+    }
+
+    @Test
+    fun `should throws an exception when try to reserve a non existent spot`() {
+        val expectedErrorMessage = "Spot not found"
+        val section = EventSection.create(
+            name = "section",
+            description = "description",
+            totalSpots = 1,
+            price = 1000,
+        )
+        section.publish()
+
+        val actualException = Assertions.assertThrows(Exception::class.java) {
+            section.reserveSpot(UUID.randomUUID().toDomainUuid())
+        }
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.message)
+    }
+
+    @Test
+    fun `should does not throws when reserve an existent section`() {
+        val spot = EventSpot.create()
+        val section = EventSection.create(
+            name = "section",
+            description = "description",
+            totalSpots = 1,
+            price = 1000,
+        )
+        section.addSpot(spot)
+        section.publishAll()
+
+        Assertions.assertDoesNotThrow {
+            section.reserveSpot(spot.id)
+        }
     }
 }

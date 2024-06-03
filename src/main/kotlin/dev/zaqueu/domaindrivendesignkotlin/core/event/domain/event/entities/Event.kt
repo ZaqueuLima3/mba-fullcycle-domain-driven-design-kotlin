@@ -91,13 +91,17 @@ internal class Event(
         _sections.add(section)
     }
 
+    fun getSection(sectionId: EventSectionId): EventSection? {
+        return this.sections.firstOrNull { it.id == sectionId }
+    }
+
     fun changeSectionInformation(
         sectionId: EventSectionId,
         name: String?,
         description: String?,
         price: Long?,
     ) {
-        val section = _sections.find { it.id == sectionId }
+        val section = getSection(sectionId)
             ?: throw Exception("Section not found")
 
         if (name != null) section.changeName(name)
@@ -110,10 +114,29 @@ internal class Event(
         spotId: EventSpotId,
         location: String,
     ) {
-        val section = _sections.find { it.id == sectionId }
+        val section = getSection(sectionId)
             ?: throw Exception("Section not found")
 
         section.changeSpotLocation(spotId, location)
+    }
+
+    fun allowReserveSpot(
+        sectionId: EventSectionId,
+        spotId: EventSpotId,
+    ): Boolean {
+        if (!this.isPublished) return false
+
+        val section = getSection(sectionId)
+            ?: throw Exception("Section not found")
+
+        return section.allowReserveSpot(spotId)
+    }
+
+    fun reserveSpot(sectionId: EventSectionId, spotId: EventSpotId) {
+        val section = getSection(sectionId)
+            ?: throw Exception("Section not found")
+
+        section.reserveSpot(spotId)
     }
 
     companion object {
