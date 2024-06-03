@@ -12,15 +12,17 @@ internal data class SpotReservation(
     val customerId: CustomerId,
 ) : AggregateRoot() {
 
-    fun create(
-        id: String,
-        reservationDate: Instant,
-        customerId: String,
-    ): SpotReservation {
-        return SpotReservation(
-            id = id.toDomainUuid(),
-            reservationDate = reservationDate,
-            customerId = customerId.toDomainUuid(),
-        )
+    companion object {
+        fun create(
+            id: String,
+            reservationDate: Instant,
+            customerId: String,
+        ): SpotReservation {
+            return SpotReservation(
+                id = id.toDomainUuid(),
+                reservationDate = reservationDate,
+                customerId = customerId.toDomainUuid(),
+            )
+        }
     }
 }

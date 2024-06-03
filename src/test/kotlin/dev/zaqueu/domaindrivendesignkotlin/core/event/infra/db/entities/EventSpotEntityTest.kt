@@ -17,7 +17,7 @@ import java.util.*
 @ExtendWith(SpringExtension::class)
 @AutoConfigureTestEntityManager
 @IntegrationTest
-class EventSpotSectionEntityTest {
+class EventSpotEntityTest {
     @Test
     fun `should convert a EventSpotEntity to EventSpot domain`() {
         val partner = Partner.create(
