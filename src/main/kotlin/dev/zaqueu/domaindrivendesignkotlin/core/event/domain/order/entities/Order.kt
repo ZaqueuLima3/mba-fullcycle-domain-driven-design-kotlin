@@ -6,20 +6,6 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobjec
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.valueobject.OrderId
 
-/**
- * id, customer_id, amount, event_spot_id, status.
- * status: PENDING, PAID, CANCELLED
- * amount = preço pago
- *
- * pay()
- *
- * cancel()
- */
-
-/**
- * SpotReservation: spot_id (PK), reservation_date, customer_id
- */
-
 internal data class Order(
     override val id: OrderId,
     val amount: Long,
