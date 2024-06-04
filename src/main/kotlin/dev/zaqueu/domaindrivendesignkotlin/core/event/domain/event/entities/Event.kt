@@ -132,11 +132,11 @@ internal class Event(
         return section.allowReserveSpot(spotId)
     }
 
-    fun reserveSpot(sectionId: EventSectionId, spotId: EventSpotId) {
-        val section = getSection(sectionId)
+    fun reserveSpot(section: EventSection, spot: EventSpot) {
+        val sectionFound = getSection(section.id)
             ?: throw Exception("Section not found")
 
-        section.reserveSpot(spotId)
+        sectionFound.reserveSpot(spot.id)
     }
 
     companion object {

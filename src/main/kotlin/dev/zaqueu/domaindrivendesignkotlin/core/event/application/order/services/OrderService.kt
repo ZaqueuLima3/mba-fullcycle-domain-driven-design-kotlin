@@ -3,6 +3,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.service
 import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.dto.CreateOrderDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.payment.gateway.PaymentGateway
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
@@ -13,6 +14,7 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.entities.Spot
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.repositories.OrderRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.repositories.SpotReservationRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
@@ -21,35 +23,34 @@ internal class OrderService(
     private val eventRepository: EventRepository,
     private val customerRepository: CustomerRepository,
     private val spotReservationRepository: SpotReservationRepository,
-    private val unitOfWork: UnitOfWork
+    private val unitOfWork: UnitOfWork,
+    private val paymentGateway: PaymentGateway,
 ) {
     fun list(): List<Order> {
         return orderRepository.findAll()
     }
 
+    @Transactional
     fun create(input: CreateOrderDto): Order {
         spotReservationRepository.findById(input.spotId.toDomainUuid<EventSpotId>())?.let {
             throw Exception("Spot already reserved")
         }
 
         customerRepository.findById(input.customerId.toDomainUuid<CustomerId>())
-            ?: throw Exception("Customer not found")
+            ?: throw Exception("Customer not found with ID: ${input.customerId}")
 
         val event = eventRepository.findById(input.eventId.toDomainUuid<EventId>())
-            ?: throw Exception("Event not found")
+            ?: throw Exception("Event not found with ID: ${input.eventId}")
 
         val section = event.getSection(input.sectionId.toDomainUuid())
-            ?: throw Exception("Section not found")
+            ?: throw Exception("Section not found with ID: ${input.sectionId}")
 
         val spot = section.getSpot(input.spotId.toDomainUuid())
-            ?: throw Exception("Spot not found")
+            ?: throw Exception("Spot not found with ID: ${input.spotId}")
 
         if (!event.allowReserveSpot(section.id, spot.id)) throw Exception("Spot not available")
 
-        event.reserveSpot(
-            sectionId = input.sectionId.toDomainUuid(),
-            spotId = input.spotId.toDomainUuid(),
-        )
+        event.reserveSpot(section, spot)
 
         val spotReservation = SpotReservation.create(
             id = input.spotId,
@@ -64,11 +65,24 @@ internal class OrderService(
             eventSpotId = input.spotId,
         )
 
-        spotReservationRepository.add(spotReservation)
-        eventRepository.add(event)
-        orderRepository.add(order)
-        unitOfWork.commit()
+        return try {
+            spotReservationRepository.add(spotReservation)
 
-        return order
+            paymentGateway.payment(token = input.cardToken, amount = order.amount)
+            order.pay()
+
+            eventRepository.add(event)
+            orderRepository.add(order)
+            unitOfWork.commit()
+
+            order
+        } catch (e: Exception) {
+            order.cancel()
+            orderRepository.add(order)
+
+            throw Exception(e)
+        }
     }
+
+    private fun processPayment() {}
 }

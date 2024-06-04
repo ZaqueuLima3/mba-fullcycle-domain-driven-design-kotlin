@@ -468,6 +468,15 @@ class EventTest {
     fun `should throws an exception when try to reserve a non existent section`() {
         val expectedErrorMessage = "Section not found"
 
+        val spot = EventSpot.create()
+
+        val section = EventSection.create(
+            name = "name",
+            description = "description",
+            totalSpots = 10,
+            price = 1000,
+        )
+
         val event = Event.create(
             name = "name",
             description = "description",
@@ -477,7 +486,7 @@ class EventTest {
         event.publishAll()
 
         val actualException = Assertions.assertThrows(Exception::class.java) {
-            event.reserveSpot(UUID.randomUUID().toDomainUuid(), UUID.randomUUID().toDomainUuid())
+            event.reserveSpot(section, spot)
         }
 
         Assertions.assertEquals(expectedErrorMessage, actualException.message)
@@ -505,7 +514,7 @@ class EventTest {
         event.publishAll()
 
         Assertions.assertDoesNotThrow {
-            event.reserveSpot(section.id, spot.id)
+            event.reserveSpot(section, spot)
         }
     }
 }

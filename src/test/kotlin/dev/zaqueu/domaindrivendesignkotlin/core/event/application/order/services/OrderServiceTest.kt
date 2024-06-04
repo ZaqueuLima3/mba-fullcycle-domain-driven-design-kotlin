@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.service
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.dto.CreateOrderDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.payment.gateway.PaymentGateway
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
@@ -35,6 +36,9 @@ class OrderServiceTest {
     @MockK
     internal lateinit var unitOfWork: UnitOfWork
 
+    @MockK
+    internal lateinit var paymentGateway: PaymentGateway
+
     private lateinit var orderService: OrderService
 
     @BeforeEach
@@ -45,7 +49,8 @@ class OrderServiceTest {
             eventRepository,
             customerRepository,
             spotReservationRepository,
-            unitOfWork
+            unitOfWork,
+            paymentGateway,
         )
 
         every {
@@ -120,7 +125,8 @@ class OrderServiceTest {
             customerId = customer.id.value,
             spotId = spot.id.value,
             sectionId = section.id.value,
-            eventId = event.id.value
+            eventId = event.id.value,
+            cardToken = UUID.randomUUID().toString()
         )
 
         every {
@@ -135,12 +141,16 @@ class OrderServiceTest {
             eventRepository.findById(any())
         } returns event
 
+        every {
+            paymentGateway.payment(any(), any())
+        } just Runs
+
         val order = orderService.create(input)
 
         Assertions.assertNotNull(order.id)
         Assertions.assertEquals(input.customerId, order.customerId.value)
         Assertions.assertEquals(input.spotId, order.eventSpotId.value)
-        Assertions.assertEquals(Order.Status.PENDING, order.status)
+        Assertions.assertEquals(Order.Status.PAID, order.status)
         Assertions.assertEquals(section.price, order.amount)
 
         verifySequence {
@@ -194,7 +204,8 @@ class OrderServiceTest {
             customerId = customer.id.value,
             spotId = spot.id.value,
             sectionId = section.id.value,
-            eventId = event.id.value
+            eventId = event.id.value,
+            cardToken = UUID.randomUUID().toString()
         )
 
         every {
@@ -239,7 +250,8 @@ class OrderServiceTest {
 
     @Test
     fun `should not create a new order with a non existent spot`() {
-        val expectedErrorMessage = "Spot not found"
+        val expectedSpotId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Spot not found with ID: $expectedSpotId"
 
         val customer = Customer.create(
             name = "name",
@@ -264,9 +276,10 @@ class OrderServiceTest {
 
         val input = CreateOrderDto(
             customerId = customer.id.value,
-            spotId = UUID.randomUUID().toString(),
+            spotId = expectedSpotId,
             sectionId = section.id.value,
-            eventId = event.id.value
+            eventId = event.id.value,
+            cardToken = UUID.randomUUID().toString()
         )
 
         every {
@@ -311,7 +324,8 @@ class OrderServiceTest {
 
     @Test
     fun `should not create a new order with a non existent section`() {
-        val expectedErrorMessage = "Section not found"
+        val expectedSectionId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Section not found with ID: $expectedSectionId"
 
         val customer = Customer.create(
             name = "name",
@@ -328,8 +342,9 @@ class OrderServiceTest {
         val input = CreateOrderDto(
             customerId = customer.id.value,
             spotId = UUID.randomUUID().toString(),
-            sectionId = UUID.randomUUID().toString(),
-            eventId = event.id.value
+            sectionId = expectedSectionId,
+            eventId = event.id.value,
+            cardToken = UUID.randomUUID().toString()
         )
 
         every {
@@ -374,7 +389,8 @@ class OrderServiceTest {
 
     @Test
     fun `should not create a new order with a non existent event`() {
-        val expectedErrorMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Event not found with ID: $expectedEventId"
 
         val customer = Customer.create(
             name = "name",
@@ -385,7 +401,8 @@ class OrderServiceTest {
             customerId = customer.id.value,
             spotId = UUID.randomUUID().toString(),
             sectionId = UUID.randomUUID().toString(),
-            eventId = UUID.randomUUID().toString()
+            eventId = expectedEventId,
+            cardToken = UUID.randomUUID().toString(),
         )
 
         every {
@@ -430,13 +447,15 @@ class OrderServiceTest {
 
     @Test
     fun `should not create a new order with a non existent customer`() {
-        val expectedErrorMessage = "Customer not found"
+        val expectedCustomerId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Customer not found with ID: $expectedCustomerId"
 
         val input = CreateOrderDto(
-            customerId = UUID.randomUUID().toString(),
+            customerId = expectedCustomerId,
             spotId = UUID.randomUUID().toString(),
             sectionId = UUID.randomUUID().toString(),
-            eventId = UUID.randomUUID().toString()
+            eventId = UUID.randomUUID().toString(),
+            cardToken = UUID.randomUUID().toString(),
         )
 
         every {
@@ -489,7 +508,8 @@ class OrderServiceTest {
             customerId = UUID.randomUUID().toString(),
             spotId = UUID.randomUUID().toString(),
             sectionId = UUID.randomUUID().toString(),
-            eventId = UUID.randomUUID().toString()
+            eventId = UUID.randomUUID().toString(),
+            cardToken = UUID.randomUUID().toString(),
         )
 
         every {

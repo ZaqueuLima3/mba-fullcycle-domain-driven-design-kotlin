@@ -5,4 +5,5 @@ internal data class CreateOrderDto(
     val spotId: String,
     val sectionId: String,
     val eventId: String,
+    val cardToken: String,
 )
