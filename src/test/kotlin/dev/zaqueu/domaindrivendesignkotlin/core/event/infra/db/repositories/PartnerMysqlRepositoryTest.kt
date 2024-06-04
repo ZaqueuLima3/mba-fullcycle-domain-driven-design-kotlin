@@ -47,6 +47,31 @@ class PartnerMysqlRepositoryTest {
 
     @Test
     @Transactional
+    fun `should update a partner`() {
+        val partner = Partner.create(
+            name = "Test Partner"
+        )
+
+        partnerRepository.add(partner)
+        entityManager.flush()
+        entityManager.clear()
+
+        var partnerEntity = entityManager.find(PartnerEntity::class.java, partner.id.toUUID())
+        Assertions.assertNotNull(partnerEntity)
+        Assertions.assertEquals(partner.name, partnerEntity.name)
+
+        partner.changeName("New Name")
+        partnerRepository.update(partner)
+        entityManager.flush()
+        entityManager.clear()
+
+        partnerEntity = entityManager.find(PartnerEntity::class.java, partner.id.toUUID())
+        Assertions.assertNotNull(partnerEntity)
+        Assertions.assertEquals(partner.name, partnerEntity.name)
+    }
+
+    @Test
+    @Transactional
     fun `should return a partner when it is found`() {
         val partner = Partner.create(
             name = "Test Partner"

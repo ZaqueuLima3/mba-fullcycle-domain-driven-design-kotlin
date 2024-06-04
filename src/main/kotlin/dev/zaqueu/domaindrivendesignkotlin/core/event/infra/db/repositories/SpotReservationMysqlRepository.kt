@@ -34,8 +34,7 @@ internal class SpotReservationMysqlRepository(
     }
 
     override fun update(entity: SpotReservation) {
-        val (customer, eventSpot) = getEntities(entity.customerId.toUUID(), entity.id.toUUID())
-        entityManager.merge(SpotReservationEntity.fromDomain(entity, customer, eventSpot))
+        throw UnsupportedOperationException("Update operation is not supported by this repository")
     }
 
     override fun findById(id: Uuid): SpotReservation? {

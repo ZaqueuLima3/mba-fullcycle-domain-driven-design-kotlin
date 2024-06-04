@@ -48,6 +48,32 @@ class CustomerMysqlRepositoryTest {
 
     @Test
     @Transactional
+    fun `should update a customer`() {
+        val customer = Customer.create(
+            name = "Test Customer",
+            cpf = "93928642057",
+        )
+
+        customerRepository.add(customer)
+        entityManager.flush()
+        entityManager.clear()
+
+        var customerEntity = entityManager.find(CustomerEntity::class.java, customer.id.toUUID())
+        Assertions.assertNotNull(customerEntity)
+        Assertions.assertEquals(customer.name, customerEntity.name)
+
+        customer.changeName("John Doe")
+        customerRepository.update(customer)
+        entityManager.flush()
+        entityManager.clear()
+
+        customerEntity = entityManager.find(CustomerEntity::class.java, customer.id.toUUID())
+        Assertions.assertNotNull(customerEntity)
+        Assertions.assertEquals(customer.name, customerEntity.name)
+    }
+
+    @Test
+    @Transactional
     fun `should throws an Exception when try to add customer with the same Cpf`() {
         val customer1 = Customer.create(
             name = "Test Customer one",

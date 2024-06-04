@@ -4,7 +4,5 @@ import org.springframework.stereotype.Component
 
 @Component
 class PaymentGateway {
-    fun payment(token: String, amount: Long) {
-
-    }
+    fun payment(token: String, amount: Long) {}
 }

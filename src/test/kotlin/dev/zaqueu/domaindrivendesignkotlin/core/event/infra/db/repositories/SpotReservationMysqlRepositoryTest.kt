@@ -91,7 +91,7 @@ class SpotReservationMysqlRepositoryTest {
 
     @Test
     @Transactional
-    fun `should add a new order`() {
+    fun `should add a new spot reservation`() {
         val spotReservation = SpotReservation.create(
             id = spotId.value,
             customerId = customer.id.value,
@@ -105,6 +105,23 @@ class SpotReservationMysqlRepositoryTest {
         val spotReservationEntity = entityManager.find(SpotReservationEntity::class.java, spotReservation.id.toUUID())
         Assertions.assertNotNull(spotReservationEntity)
         Assertions.assertEquals(spotReservation.id.value, spotReservationEntity.id.toString())
+    }
+
+    @Test
+    @Transactional
+    fun `should throw an exception when try to update a spot reservation`() {
+        val expectedErrorMessage = "Update operation is not supported by this repository"
+        val spotReservation = SpotReservation.create(
+            id = spotId.value,
+            customerId = customer.id.value,
+            reservationDate = Instant.now()
+        )
+
+        val actualException = Assertions.assertThrows(UnsupportedOperationException::class.java) {
+            spotReservationRepository.update(spotReservation)
+        }
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.message)
     }
 
     @Test

@@ -83,6 +83,4 @@ internal class OrderService(
             throw Exception(e)
         }
     }
-
-    private fun processPayment() {}
 }

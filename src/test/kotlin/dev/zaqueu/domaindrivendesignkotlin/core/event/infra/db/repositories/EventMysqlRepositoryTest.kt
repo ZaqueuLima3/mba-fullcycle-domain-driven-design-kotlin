@@ -92,6 +92,51 @@ class EventMysqlRepositoryTest {
 
     @Test
     @Transactional
+    fun `should update an event`() {
+        val partner = Partner.create(
+            name = "Test Name"
+        )
+
+        val section = EventSection.create(
+            name = "Section",
+            description = "Some section description",
+            totalSpots = 5L,
+            price = 1000,
+        )
+
+        val event = partner.initializeEvent(
+            name = "Event Test",
+            description = "Event description",
+            date = Instant.now(),
+            sections = mutableSetOf(section)
+        )
+
+        partnerRepository.add(partner)
+        eventRepository.add(event)
+        entityManager.flush()
+        entityManager.clear()
+
+        var eventEntity = entityManager.find(EventEntity::class.java, event.id.toUUID())
+        Assertions.assertNotNull(eventEntity)
+        Assertions.assertEquals(event.name, eventEntity.name)
+        Assertions.assertEquals(event.description, eventEntity.description)
+        Assertions.assertEquals(event.date, eventEntity.date)
+        Assertions.assertEquals(event.totalSpots, eventEntity.totalSpots)
+        Assertions.assertEquals(event.partnerId.value, eventEntity.partner.id.toString())
+        Assertions.assertEquals(event.sections.size, eventEntity.sections.size)
+
+        event.changeName("New Name")
+        eventRepository.update(event)
+        entityManager.flush()
+        entityManager.clear()
+
+        eventEntity = entityManager.find(EventEntity::class.java, event.id.toUUID())
+        Assertions.assertNotNull(eventEntity)
+        Assertions.assertEquals(event.name, eventEntity.name)
+    }
+
+    @Test
+    @Transactional
     fun `should return a event when it is found`() {
         val partner = Partner.create(
             name = "Test Name"

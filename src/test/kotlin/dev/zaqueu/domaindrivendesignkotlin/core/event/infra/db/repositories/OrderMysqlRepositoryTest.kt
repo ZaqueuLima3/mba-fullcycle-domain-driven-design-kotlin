@@ -111,6 +111,34 @@ class OrderMysqlRepositoryTest {
 
     @Test
     @Transactional
+    fun `should update a order`() {
+        val order = Order.create(
+            amount = 1000L,
+            status = Order.Status.PENDING,
+            customerId = customer.id.value,
+            eventSpotId = spotId.value,
+        )
+
+        orderRepository.add(order)
+        entityManager.flush()
+        entityManager.clear()
+
+        var orderEntity = entityManager.find(OrderEntity::class.java, order.id.toUUID())
+        Assertions.assertNotNull(orderEntity)
+        Assertions.assertEquals(order.id.value, orderEntity.id.toString())
+
+        order.pay()
+        orderRepository.update(order)
+        entityManager.flush()
+        entityManager.clear()
+
+        orderEntity = entityManager.find(OrderEntity::class.java, order.id.toUUID())
+        Assertions.assertNotNull(orderEntity)
+        Assertions.assertEquals(Order.Status.PAID, orderEntity.status)
+    }
+
+    @Test
+    @Transactional
     fun `should throws an Exception when try to add order with a non existent customer`() {
         val expectedErrorMessage = "Customer not found"
         val order = Order.create(
