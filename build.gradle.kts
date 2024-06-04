@@ -30,6 +30,9 @@ dependencies {
     // jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+
     // mysql
     runtimeOnly("com.mysql:mysql-connector-j")
 
