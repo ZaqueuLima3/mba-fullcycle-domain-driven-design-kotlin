@@ -9,30 +9,30 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.C
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.valueobject.CustomerId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 internal class CustomerService(
     private val customerRepository: CustomerRepository,
-    private val unitOfWork: UnitOfWork
 ) {
     fun list(): List<Customer> {
         return customerRepository.findAll()
     }
 
+    @Transactional
     fun register(input: CreateCustomerDto): Customer {
         val customer = input.toDomain()
         customerRepository.add(customer)
-        unitOfWork.commit()
         return customer
     }
 
+    @Transactional
     fun update(input: UpdateCustomerDto): Customer {
         val customer = customerRepository.findById(input.id.toDomainUuid<CustomerId>()) ?: throw Exception("Customer not found")
 
         if (!input.name.isNullOrBlank()) customer.changeName(input.name)
 
-        customerRepository.add(customer)
-        unitOfWork.commit()
+        customerRepository.update(customer)
 
         return customer
     }

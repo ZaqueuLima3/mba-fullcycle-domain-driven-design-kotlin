@@ -16,14 +16,24 @@ internal class OrderMysqlRepository(
     private val entityManager: EntityManager
 ) : OrderRepository {
 
-    override fun add(entity: Order) {
-        val customer = entityManager.find(CustomerEntity::class.java, entity.customerId.toUUID())
+    private fun getEntities(customerId: UUID, spotId: UUID): Pair<CustomerEntity, EventSpotEntity> {
+        val customer = entityManager.find(CustomerEntity::class.java, customerId)
             ?: throw Exception("Customer not found")
 
-        val eventSpot = entityManager.find(EventSpotEntity::class.java, entity.eventSpotId.toUUID())
+        val eventSpot = entityManager.find(EventSpotEntity::class.java, spotId)
             ?: throw Exception("Spot not found")
 
+        return customer to eventSpot
+    }
+
+    override fun add(entity: Order) {
+        val (customer, eventSpot) = getEntities(entity.customerId.toUUID(), entity.eventSpotId.toUUID())
         entityManager.persist(OrderEntity.fromDomain(entity, customer, eventSpot))
+    }
+
+    override fun update(entity: Order) {
+        val (customer, eventSpot) = getEntities(entity.customerId.toUUID(), entity.eventSpotId.toUUID())
+        entityManager.merge(OrderEntity.fromDomain(entity, customer, eventSpot))
     }
 
     override fun findById(id: Uuid): Order? {

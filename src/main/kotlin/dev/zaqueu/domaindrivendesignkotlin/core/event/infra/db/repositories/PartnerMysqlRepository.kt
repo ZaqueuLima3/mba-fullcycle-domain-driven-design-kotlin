@@ -18,6 +18,10 @@ internal class PartnerMysqlRepository(
         entityManager.persist(PartnerEntity.fromDomain(entity))
     }
 
+    override fun update(entity: Partner) {
+        entityManager.merge(PartnerEntity.fromDomain(entity))
+    }
+
     override fun findById(id: Uuid): Partner? {
         val entity = entityManager.find(PartnerEntity::class.java, id.toUUID())
         return entity?.toDomain()

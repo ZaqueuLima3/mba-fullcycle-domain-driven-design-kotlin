@@ -18,22 +18,15 @@ class CustomerServiceTest {
     @MockK
     internal lateinit var customerRepository: CustomerRepository
 
-    @MockK
-    internal lateinit var unitOfWork: UnitOfWork
-
     private lateinit var customerService: CustomerService
 
     @BeforeEach
     fun setup() {
         MockKAnnotations.init(this)
-        customerService = CustomerService(customerRepository, unitOfWork)
+        customerService = CustomerService(customerRepository)
 
         every {
             customerRepository.add(any())
-        } just Runs
-
-        every {
-            unitOfWork.commit()
         } just Runs
     }
 
@@ -75,9 +68,8 @@ class CustomerServiceTest {
 
         verify {
             customerRepository.add(any())
-            unitOfWork.commit()
         }
-        confirmVerified(customerRepository, unitOfWork)
+        confirmVerified(customerRepository)
     }
 
     @Test
@@ -98,16 +90,19 @@ class CustomerServiceTest {
             customerRepository.findById(customer.id)
         } returns customer
 
+        every {
+            customerRepository.update(any())
+        } just Runs
+
         val updatedCustomer = customerService.update(input)
 
         Assertions.assertEquals(input.name, updatedCustomer.name)
 
         verify {
             customerRepository.findById(customer.id)
-            customerRepository.add(any())
-            unitOfWork.commit()
+            customerRepository.update(any())
         }
-        confirmVerified(customerRepository, unitOfWork)
+        confirmVerified(customerRepository)
     }
 
     @Test
@@ -128,15 +123,18 @@ class CustomerServiceTest {
             customerRepository.findById(customer.id)
         } returns customer
 
+        every {
+            customerRepository.update(any())
+        } just Runs
+
         val updatedCustomer = customerService.update(input)
 
         Assertions.assertEquals(customer.name, updatedCustomer.name)
 
         verify {
             customerRepository.findById(customer.id)
-            customerRepository.add(any())
-            unitOfWork.commit()
+            customerRepository.update(any())
         }
-        confirmVerified(customerRepository, unitOfWork)
+        confirmVerified(customerRepository)
     }
 }
