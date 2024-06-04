@@ -23,7 +23,6 @@ internal class OrderService(
     private val eventRepository: EventRepository,
     private val customerRepository: CustomerRepository,
     private val spotReservationRepository: SpotReservationRepository,
-    private val unitOfWork: UnitOfWork,
     private val paymentGateway: PaymentGateway,
 ) {
     fun list(): List<Order> {
@@ -73,7 +72,6 @@ internal class OrderService(
 
             eventRepository.add(event)
             orderRepository.add(order)
-            unitOfWork.commit()
 
             order
         } catch (e: Exception) {
