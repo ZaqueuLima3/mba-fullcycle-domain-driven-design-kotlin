@@ -44,4 +44,8 @@ internal class EventMysqlRepository(
         val partnerEntity = entityManager.find(EventEntity::class.java, id.toUUID())
         partnerEntity?.let { entityManager.remove(it) }
     }
+
+    override fun deleteAll() {
+        entityManager.createQuery("DELETE FROM customers").executeUpdate()
+    }
 }

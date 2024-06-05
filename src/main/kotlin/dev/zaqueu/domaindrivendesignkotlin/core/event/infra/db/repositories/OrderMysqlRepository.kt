@@ -51,4 +51,8 @@ internal class OrderMysqlRepository(
         val partnerEntity = entityManager.find(OrderEntity::class.java, id.toUUID())
         partnerEntity?.let { entityManager.remove(it) }
     }
+
+    override fun deleteAll() {
+        entityManager.createQuery("DELETE FROM customers").executeUpdate()
+    }
 }

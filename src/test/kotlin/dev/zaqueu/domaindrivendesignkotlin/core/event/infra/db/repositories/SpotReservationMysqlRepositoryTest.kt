@@ -25,9 +25,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant
 import java.util.*
 
-@SpringBootTest
-@ExtendWith(SpringExtension::class)
-@AutoConfigureTestEntityManager
 @IntegrationTest
 class SpotReservationMysqlRepositoryTest {
 

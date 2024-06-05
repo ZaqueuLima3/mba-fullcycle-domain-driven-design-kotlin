@@ -4,13 +4,13 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.C
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class CustomerListResponse(
+internal data class CustomerResponse(
     val id: String,
     val name: String,
     val cpf: String,
 ) {
     companion object {
-        fun fromDomain(customer: Customer) = CustomerListResponse(
+        fun fromDomain(customer: Customer) = CustomerResponse(
             id = customer.id.value,
             name = customer.name,
             cpf = customer.cpf.value,

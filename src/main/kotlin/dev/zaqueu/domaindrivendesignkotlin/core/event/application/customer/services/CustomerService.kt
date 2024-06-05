@@ -27,6 +27,11 @@ internal class CustomerService(
     }
 
     @Transactional
+    fun findById(id: String): Customer? {
+        return customerRepository.findById(id.toDomainUuid<CustomerId>())
+    }
+
+    @Transactional
     fun update(input: UpdateCustomerDto): Customer {
         val customer = customerRepository.findById(input.id.toDomainUuid<CustomerId>()) ?: throw Exception("Customer not found")
 
@@ -35,5 +40,10 @@ internal class CustomerService(
         customerRepository.update(customer)
 
         return customer
+    }
+
+    @Transactional
+    fun delete(id: String) {
+        customerRepository.delete(id.toDomainUuid<CustomerId>())
     }
 }

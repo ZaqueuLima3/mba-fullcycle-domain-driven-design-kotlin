@@ -2,11 +2,13 @@ package dev.zaqueu.domaindrivendesignkotlin.api.customer
 
 import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.CreateCustomerRequest
 import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.CustomerListResponse
+import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.CustomerResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.UpdateCustomerRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -26,7 +28,7 @@ internal interface CustomerApi {
             ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
         ]
     )
-    fun createCustomer(@RequestBody request: CreateCustomerRequest): ResponseEntity<String>
+    fun createCustomer(@RequestBody request: CreateCustomerRequest): ResponseEntity<CustomerResponse>
 
     @PutMapping(
         value = ["{id}"],
@@ -44,7 +46,7 @@ internal interface CustomerApi {
     fun updateById(
         @PathVariable(name = "id") id: String,
         @RequestBody request: UpdateCustomerRequest
-    ): ResponseEntity<String>
+    ): ResponseEntity<CustomerResponse>
 
     @GetMapping(
         produces = [MediaType.APPLICATION_JSON_VALUE]
@@ -57,5 +59,36 @@ internal interface CustomerApi {
             ApiResponse(responseCode = "500", description = "An internal server error was thrown")
         ]
     )
-    fun listHouses(): ResponseEntity<List<CustomerListResponse>>;
+    fun listCustomers(): ResponseEntity<List<CustomerListResponse>>
+
+    @GetMapping(
+        value = ["/{id}"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    @Operation(summary = "Get a customer by id")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Get successfully"),
+            ApiResponse(responseCode = "400", description = "Invalid request body"),
+            ApiResponse(responseCode = "404", description = "Customer was not found"),
+            ApiResponse(responseCode = "500", description = "Internal server error"),
+        ]
+    )
+    @ResponseStatus(HttpStatus.OK)
+    fun getById(@PathVariable(name = "id") id: String): ResponseEntity<CustomerResponse?>
+
+    @DeleteMapping(
+        value = ["{id}"],
+    )
+    @Operation(summary = "Delete a customer by it's identifier")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "204", description = "Customer deleted successfully"),
+            ApiResponse(responseCode = "404", description = "Customer was not found"),
+            ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+        ]
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteById(@PathVariable(name = "id") id: String)
 }
