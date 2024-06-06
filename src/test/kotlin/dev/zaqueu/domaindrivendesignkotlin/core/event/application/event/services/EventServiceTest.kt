@@ -53,7 +53,7 @@ class EventServiceTest {
             eventRepository.findAll()
         } returns expectedEvents
 
-        val events = eventService.list()
+        val events = eventService.findEvents()
 
         Assertions.assertEquals(expectedEvents, events)
 
@@ -205,6 +205,41 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.add(any())
+        }
+        confirmVerified(eventRepository)
+    }
+
+    @Test
+    fun `should return a partner`() {
+        val expectedPartnerId = UUID.randomUUID().toDomainUuid<PartnerId>()
+
+        val partner = Partner(
+            id = expectedPartnerId,
+            name = "Disney",
+        )
+
+        val event = Event.create(
+            name = "Event name",
+            description = "some description",
+            date = Instant.now(),
+            partnerId = expectedPartnerId.value,
+        )
+
+        every {
+            partnerRepository.findById(partner.id)
+        } returns partner
+
+        every {
+            eventRepository.findById(any())
+        } returns event
+
+        val eventFound = eventService.findById(UUID.randomUUID().toString())
+
+        Assertions.assertNotNull(eventFound?.id)
+        Assertions.assertEquals(event.name, eventFound?.name)
+
+        verify {
+            eventRepository.findById(any())
         }
         confirmVerified(eventRepository)
     }
@@ -757,5 +792,16 @@ class EventServiceTest {
         }
 
         Assertions.assertEquals(expectedMessage, actualException.message)
+    }
+
+    @Test
+    fun `should not throws when delete a event`() {
+        coEvery {
+            eventRepository.delete(any())
+        } just runs
+
+        Assertions.assertDoesNotThrow {
+            eventService.delete(UUID.randomUUID().toString())
+        }
     }
 }

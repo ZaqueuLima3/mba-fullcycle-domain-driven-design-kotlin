@@ -18,7 +18,7 @@ internal class EventService(
     private val partnerRepository: PartnerRepository
 ) {
     @Transactional
-    fun list(): List<Event> {
+    fun findEvents(): List<Event> {
         return eventRepository.findAll()
     }
 
@@ -38,6 +38,11 @@ internal class EventService(
             ?: throw Exception("Section not found")
 
         return section.spots.toList()
+    }
+
+    @Transactional
+    fun findById(id: String): Event? {
+        return eventRepository.findById(id.toDomainUuid<EventId>())
     }
 
     @Transactional
@@ -141,5 +146,10 @@ internal class EventService(
         eventRepository.update(event)
 
         return event
+    }
+
+    @Transactional
+    fun delete(id: String) {
+        eventRepository.delete(id.toDomainUuid<EventId>())
     }
 }

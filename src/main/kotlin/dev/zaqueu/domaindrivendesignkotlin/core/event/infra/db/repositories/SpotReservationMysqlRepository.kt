@@ -54,6 +54,6 @@ internal class SpotReservationMysqlRepository(
     }
 
     override fun deleteAll() {
-        entityManager.createQuery("DELETE FROM customers").executeUpdate()
+        entityManager.createQuery("DELETE FROM spot_reservations").executeUpdate()
     }
 }

@@ -53,6 +53,6 @@ internal class OrderMysqlRepository(
     }
 
     override fun deleteAll() {
-        entityManager.createQuery("DELETE FROM customers").executeUpdate()
+        entityManager.createQuery("DELETE FROM orders").executeUpdate()
     }
 }

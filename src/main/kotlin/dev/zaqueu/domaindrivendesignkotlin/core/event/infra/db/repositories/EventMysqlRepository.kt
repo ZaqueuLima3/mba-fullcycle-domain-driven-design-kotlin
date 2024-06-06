@@ -46,6 +46,6 @@ internal class EventMysqlRepository(
     }
 
     override fun deleteAll() {
-        entityManager.createQuery("DELETE FROM customers").executeUpdate()
+        entityManager.createQuery("DELETE FROM events").executeUpdate()
     }
 }

@@ -39,6 +39,6 @@ internal class PartnerMysqlRepository(
     }
 
     override fun deleteAll() {
-        entityManager.createQuery("DELETE FROM customers").executeUpdate()
+        entityManager.createQuery("DELETE FROM partners").executeUpdate()
     }
 }
