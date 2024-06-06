@@ -5,7 +5,8 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.entities.Orde
 import jakarta.persistence.*
 import java.util.*
 
-@Entity(name = "orders")
+@Entity
+@Table(name = "orders")
 internal data class OrderEntity(
     @Id
     @Column(name = "id")

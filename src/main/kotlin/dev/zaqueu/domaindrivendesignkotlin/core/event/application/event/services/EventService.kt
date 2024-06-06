@@ -72,7 +72,7 @@ internal class EventService(
             price = input.price,
         )
 
-        eventRepository.add(event)
+        eventRepository.update(event)
 
         return event
     }

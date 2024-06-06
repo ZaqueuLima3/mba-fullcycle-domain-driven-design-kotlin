@@ -5,9 +5,11 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.C
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.util.*
 
-@Entity(name = "customers")
+@Entity
+@Table(name = "customers")
 internal class CustomerEntity(
     @Id
     @Column(name = "id")

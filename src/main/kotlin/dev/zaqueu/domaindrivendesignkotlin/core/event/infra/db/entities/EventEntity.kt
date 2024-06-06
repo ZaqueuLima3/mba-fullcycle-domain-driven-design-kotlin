@@ -6,7 +6,8 @@ import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
 
-@Entity(name = "events")
+@Entity
+@Table(name = "events")
 internal class EventEntity(
     @Id
     @Column(name = "id")
@@ -34,8 +35,7 @@ internal class EventEntity(
     @JoinColumn(name = "partner_id", nullable = false)
     var partner: PartnerEntity,
 ) {
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "event_id")
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var sections: MutableSet<EventSectionEntity> = mutableSetOf()
 
     companion object {

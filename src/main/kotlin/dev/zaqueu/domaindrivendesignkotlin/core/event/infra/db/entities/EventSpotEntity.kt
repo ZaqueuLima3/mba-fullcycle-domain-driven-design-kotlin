@@ -5,7 +5,8 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Even
 import jakarta.persistence.*
 import java.util.*
 
-@Entity(name = "event_spots")
+@Entity
+@Table(name = "event_spots")
 internal class EventSpotEntity(
     @Id
     @Column(name = "id")

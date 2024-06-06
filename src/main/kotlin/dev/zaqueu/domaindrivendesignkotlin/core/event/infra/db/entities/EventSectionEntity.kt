@@ -6,7 +6,8 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.EventSpo
 import jakarta.persistence.*
 import java.util.*
 
-@Entity(name = "event_sections")
+@Entity
+@Table(name = "event_sections")
 internal class EventSectionEntity(
     @Id
     @Column(name = "id")
@@ -34,8 +35,7 @@ internal class EventSectionEntity(
     @JoinColumn(name = "event_id")
     var event: EventEntity
 ) {
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "event_section_id")
+    @OneToMany(mappedBy = "eventSection", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var spots: MutableSet<EventSpotEntity> = mutableSetOf()
 
     companion object {
