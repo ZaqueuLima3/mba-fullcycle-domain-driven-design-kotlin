@@ -1,10 +1,8 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Cpf
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.CreateCustomerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.UpdateCustomerDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.services.CustomerService
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import io.mockk.*
@@ -12,7 +10,7 @@ import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 
 class CustomerServiceTest {
     @MockK
@@ -68,6 +66,29 @@ class CustomerServiceTest {
 
         verify {
             customerRepository.add(any())
+        }
+        confirmVerified(customerRepository)
+    }
+
+    @Test
+    fun `should return a partner`() {
+        val customer = Customer.create(
+            name = "Disney Plus",
+            cpf = "93928642057",
+        )
+
+        every {
+            customerRepository.findById(any())
+        } returns customer
+
+        val customerFound = customerService.findById(UUID.randomUUID().toString())
+
+        Assertions.assertNotNull(customerFound?.id)
+        Assertions.assertEquals(customer.name, customerFound?.name)
+        Assertions.assertEquals(customer.cpf, customerFound?.cpf)
+
+        verify {
+            customerRepository.findById(any())
         }
         confirmVerified(customerRepository)
     }
@@ -136,5 +157,16 @@ class CustomerServiceTest {
             customerRepository.update(any())
         }
         confirmVerified(customerRepository)
+    }
+
+    @Test
+    fun `should not throws when delete a customer`() {
+        coEvery {
+            customerRepository.delete(any())
+        } just runs
+
+        Assertions.assertDoesNotThrow {
+            customerService.delete(UUID.randomUUID().toString())
+        }
     }
 }

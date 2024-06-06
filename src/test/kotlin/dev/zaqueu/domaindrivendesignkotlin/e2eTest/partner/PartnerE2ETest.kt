@@ -1,10 +1,10 @@
-package dev.zaqueu.domaindrivendesignkotlin.e2eTest.consumer
+package dev.zaqueu.domaindrivendesignkotlin.e2eTest.partner
 
 import dev.zaqueu.domaindrivendesignkotlin.E2ETest
-import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.CreateCustomerRequest
-import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.CustomerListResponse
-import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.CustomerResponse
-import dev.zaqueu.domaindrivendesignkotlin.api.customer.models.UpdateCustomerRequest
+import dev.zaqueu.domaindrivendesignkotlin.api.partner.models.CreatePartnerRequest
+import dev.zaqueu.domaindrivendesignkotlin.api.partner.models.PartnerListResponse
+import dev.zaqueu.domaindrivendesignkotlin.api.partner.models.PartnerResponse
+import dev.zaqueu.domaindrivendesignkotlin.api.partner.models.UpdatePartnerRequest
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions
@@ -22,7 +22,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 
 @E2ETest
 @Testcontainers
-class CustomerE2ETest {
+class PartnerE2ETest {
 
     @Autowired
     private lateinit var mvc: MockMvc
@@ -33,31 +33,29 @@ class CustomerE2ETest {
     }
 
     @Test
-    fun `should be able to create a new customer with valid values and retrieve it`() {
+    fun `should be able to create a new partner with valid values and retrieve it`() {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning())
 
-        val expectedName = "John Doe"
-        val expectedCpf = "93928642057"
+        val expectedName = "Lollapalooza"
 
-        val customerId = givenACustomer(expectedName, expectedCpf)
+        val partnerId = givenAPartner(expectedName)
 
-        Assertions.assertNotNull(customerId)
+        Assertions.assertNotNull(partnerId)
 
-        val customer = retrieveACustomer(customerId!!)
+        val partner = retrieveAPartner(partnerId!!)
 
-        Assertions.assertEquals(customerId, customer.id)
-        Assertions.assertNotNull(expectedName, customer.name)
-        Assertions.assertNotNull(expectedCpf, customer.cpf)
+        Assertions.assertEquals(partnerId, partner.id)
+        Assertions.assertNotNull(expectedName, partner.name)
     }
 
     @Test
-    fun `should be able to list the customer`() {
+    fun `should be able to list the partner`() {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning())
 
-        givenACustomer("John Doe", "93928642057")
-        givenACustomer("Mark Ki", "83736117035")
+        val partnerId1 = givenAPartner("Lollapalooza")
+        val partnerId2 = givenAPartner("João Rock")
 
-        val request = MockMvcRequestBuilders.get("/customers")
+        val request = MockMvcRequestBuilders.get("/partners")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
 
@@ -67,47 +65,47 @@ class CustomerE2ETest {
             .response
             .contentAsString
 
-        val customers = json.decodeFromString<List<CustomerListResponse>>(response)
+        val partners = json.decodeFromString<List<PartnerListResponse>>(response)
 
-        Assertions.assertEquals(2, customers.size)
-        Assertions.assertTrue(customers.firstOrNull { it.cpf == "83736117035" } != null)
-        Assertions.assertTrue(customers.firstOrNull { it.cpf == "93928642057" } != null)
+        Assertions.assertEquals(2, partners.size)
+        Assertions.assertTrue(partners.firstOrNull { it.id == partnerId1 } != null)
+        Assertions.assertTrue(partners.firstOrNull { it.id == partnerId2 } != null)
     }
 
     @Test
-    fun `should be able to update a customer`() {
+    fun `should be able to update a partner`() {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning())
 
-        val input = UpdateCustomerRequest(
-            name = "Mark Ki"
+        val input = UpdatePartnerRequest(
+            name = "Joao Rock"
         )
 
-        val customerId = givenACustomer("John Doe", "93928642057")
+        val partnerId = givenAPartner("Lollapalooza")
 
-        val request = MockMvcRequestBuilders.put("/customers/$customerId")
+        val request = MockMvcRequestBuilders.put("/partners/$partnerId")
             .content(json.encodeToString(input))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
 
         mvc.perform(request).andExpect(status().isOk)
 
-        val customer = retrieveACustomer(customerId!!)
+        val partner = retrieveAPartner(partnerId!!)
 
-        Assertions.assertEquals(customerId, customer.id)
-        Assertions.assertEquals(input.name, customer.name)
+        Assertions.assertEquals(partnerId, partner.id)
+        Assertions.assertEquals(input.name, partner.name)
     }
 
     @Test
-    fun `should be able to delete a customer`() {
+    fun `should be able to delete a partner`() {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning())
 
-        val input = UpdateCustomerRequest(
-            name = "Mark Ki"
+        val input = UpdatePartnerRequest(
+            name = "João Rock"
         )
 
-        val customerId = givenACustomer("John Doe", "93928642057")
+        val partnerId = givenAPartner("Lollapalooza")
 
-        val request = MockMvcRequestBuilders.delete("/customers/$customerId")
+        val request = MockMvcRequestBuilders.delete("/partners/$partnerId")
             .content(json.encodeToString(input))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
@@ -115,26 +113,26 @@ class CustomerE2ETest {
         mvc.perform(request).andExpect(status().isNoContent)
     }
 
-    private fun givenACustomer(name: String, cpf: String): String? {
-        val input = CreateCustomerRequest(name, cpf)
+    private fun givenAPartner(name: String): String? {
+        val input = CreatePartnerRequest(name)
 
-        val request = MockMvcRequestBuilders.post("/customers")
+        val request = MockMvcRequestBuilders.post("/partners")
             .content(json.encodeToString(input))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
 
-        val customerId = mvc.perform(request)
+        val partnerId = mvc.perform(request)
             .andExpect(status().isCreated)
             .andReturn()
             .response
             .getHeader("Location")
 
 
-        return customerId?.replace("/customers/", "")
+        return partnerId?.replace("/partners/", "")
     }
 
-    private fun retrieveACustomer(id: String): CustomerResponse {
-        val request = MockMvcRequestBuilders.get("/customers/$id")
+    private fun retrieveAPartner(id: String): PartnerResponse {
+        val request = MockMvcRequestBuilders.get("/partners/$id")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
 
@@ -144,7 +142,7 @@ class CustomerE2ETest {
             .response
             .contentAsString
 
-        return json.decodeFromString<CustomerResponse>(response)
+        return json.decodeFromString<PartnerResponse>(response)
     }
 
     companion object {

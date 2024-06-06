@@ -1,10 +1,11 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.CreatePartnerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.UpdatePartnerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Assertions
@@ -16,22 +17,15 @@ class PartnerServiceTest {
     @MockK
     internal lateinit var partnerRepository: PartnerRepository
 
-    @MockK
-    internal lateinit var unitOfWork: UnitOfWork
-
     private lateinit var partnerService: PartnerService
 
     @BeforeEach
     fun setup() {
         MockKAnnotations.init(this)
-        partnerService = PartnerService(partnerRepository, unitOfWork)
+        partnerService = PartnerService(partnerRepository)
 
         every {
             partnerRepository.add(any())
-        } just Runs
-
-        every {
-            unitOfWork.commit()
         } just Runs
     }
 
@@ -70,9 +64,29 @@ class PartnerServiceTest {
 
         verify {
             partnerRepository.add(any())
-            unitOfWork.commit()
         }
-        confirmVerified(partnerRepository, unitOfWork)
+        confirmVerified(partnerRepository)
+    }
+
+    @Test
+    fun `should return a partner`() {
+        val partner = Partner.create(
+            name = "Disney Plus",
+        )
+
+        every {
+            partnerRepository.findById(any())
+        } returns partner
+
+        val partnerFound = partnerService.findById(UUID.randomUUID().toString())
+
+        Assertions.assertNotNull(partnerFound?.id)
+        Assertions.assertEquals(partner.name, partnerFound?.name)
+
+        verify {
+            partnerRepository.findById(any())
+        }
+        confirmVerified(partnerRepository)
     }
 
     @Test
@@ -99,9 +113,8 @@ class PartnerServiceTest {
         verify {
             partnerRepository.findById(partner.id)
             partnerRepository.add(any())
-            unitOfWork.commit()
         }
-        confirmVerified(partnerRepository, unitOfWork)
+        confirmVerified(partnerRepository)
     }
 
     @Test
@@ -128,8 +141,18 @@ class PartnerServiceTest {
         verify {
             partnerRepository.findById(partner.id)
             partnerRepository.add(any())
-            unitOfWork.commit()
         }
-        confirmVerified(partnerRepository, unitOfWork)
+        confirmVerified(partnerRepository)
+    }
+
+    @Test
+    fun `should not throws when delete a partner`() {
+        coEvery {
+            partnerRepository.delete(any())
+        } just runs
+
+        Assertions.assertDoesNotThrow {
+            partnerService.delete(UUID.randomUUID().toString())
+        }
     }
 }

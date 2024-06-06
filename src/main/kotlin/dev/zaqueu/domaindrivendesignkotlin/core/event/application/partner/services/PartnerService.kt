@@ -9,31 +9,43 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Pa
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 internal class PartnerService(
-    private val partnerRepository: PartnerRepository,
-    private val unitOfWork: UnitOfWork
+    private val partnerRepository: PartnerRepository
 ) {
+    @Transactional
     fun list(): List<Partner> {
         return partnerRepository.findAll()
     }
 
+    @Transactional
     fun register(input: CreatePartnerDto): Partner {
         val partner = input.toDomain()
         partnerRepository.add(partner)
-        unitOfWork.commit()
         return partner
     }
 
+    @Transactional
+    fun findById(id: String): Partner? {
+        return partnerRepository.findById(id.toDomainUuid<PartnerId>())
+    }
+
+
+    @Transactional
     fun update(input: UpdatePartnerDto): Partner {
         val partner = partnerRepository.findById(input.id.toDomainUuid<PartnerId>()) ?: throw Exception("Partner not found")
 
         if (!input.name.isNullOrBlank()) partner.changeName(input.name)
 
-        partnerRepository.add(partner)
-        unitOfWork.commit()
+        partnerRepository.update(partner)
 
         return partner
+    }
+
+    @Transactional
+    fun delete(id: String) {
+        partnerRepository.delete(id.toDomainUuid<PartnerId>())
     }
 }
