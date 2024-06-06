@@ -1,12 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.CreateEventDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.CreateEventSectionDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.UpdateEventDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.UpdateEventSectionDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.UpdateEventSpotLocationDto
+import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.*
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
@@ -27,22 +22,19 @@ class EventServiceTest {
     @MockK
     internal lateinit var partnerRepository: PartnerRepository
 
-    @MockK
-    internal lateinit var unitOfWork: UnitOfWork
-
     private lateinit var eventService: EventService
 
     @BeforeEach
     fun setup() {
         MockKAnnotations.init(this)
-        eventService = EventService(eventRepository, partnerRepository, unitOfWork)
+        eventService = EventService(eventRepository, partnerRepository)
 
         every {
             eventRepository.add(any())
         } just Runs
 
         every {
-            unitOfWork.commit()
+            eventRepository.update(any())
         } just Runs
     }
 
@@ -213,9 +205,8 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.add(any())
-            unitOfWork.commit()
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -274,9 +265,8 @@ class EventServiceTest {
         verifySequence {
             eventRepository.findById(event.id)
             eventRepository.add(any())
-            unitOfWork.commit()
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -334,10 +324,9 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
-            unitOfWork.commit()
+            eventRepository.update(any())
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -370,10 +359,9 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
-            unitOfWork.commit()
+            eventRepository.update(any())
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -441,10 +429,9 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
-            unitOfWork.commit()
+            eventRepository.update(any())
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -488,10 +475,9 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
-            unitOfWork.commit()
+            eventRepository.update(any())
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -587,10 +573,9 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
-            unitOfWork.commit()
+            eventRepository.update(any())
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -710,10 +695,9 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
-            unitOfWork.commit()
+            eventRepository.update(any())
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test
@@ -755,10 +739,9 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
-            unitOfWork.commit()
+            eventRepository.update(any())
         }
-        confirmVerified(eventRepository, unitOfWork)
+        confirmVerified(eventRepository)
     }
 
     @Test

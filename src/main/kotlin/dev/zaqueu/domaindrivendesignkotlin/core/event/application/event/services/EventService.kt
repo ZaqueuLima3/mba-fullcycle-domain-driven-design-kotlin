@@ -1,12 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.*
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.CreateEventDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.CreateEventSectionDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.UpdateEventDto
-import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.UpdateEventSectionDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSpot
@@ -15,17 +10,19 @@ import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.E
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 internal class EventService(
     private val eventRepository: EventRepository,
-    private val partnerRepository: PartnerRepository,
-    private val unitOfWork: UnitOfWork
+    private val partnerRepository: PartnerRepository
 ) {
+    @Transactional
     fun list(): List<Event> {
         return eventRepository.findAll()
     }
 
+    @Transactional
     fun findSections(eventId: String): List<EventSection> {
         val event = eventRepository.findById(eventId.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
@@ -33,6 +30,7 @@ internal class EventService(
         return event.sections.toList()
     }
 
+    @Transactional
     fun findSpots(eventId: String, sectionId: String): List<EventSpot> {
         val event = eventRepository.findById(eventId.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
@@ -42,6 +40,7 @@ internal class EventService(
         return section.spots.toList()
     }
 
+    @Transactional
     fun create(input: CreateEventDto): Event {
         val partner = partnerRepository.findById(input.partnerId.toDomainUuid<PartnerId>())
             ?: throw Exception("Partner not found")
@@ -53,10 +52,10 @@ internal class EventService(
         )
 
         eventRepository.add(event)
-        unitOfWork.commit()
         return event
     }
 
+    @Transactional
     fun addSection(input: CreateEventSectionDto): Event {
         val event = eventRepository.findById(input.eventId.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
@@ -69,11 +68,11 @@ internal class EventService(
         )
 
         eventRepository.add(event)
-        unitOfWork.commit()
 
         return event
     }
 
+    @Transactional
     fun update(input: UpdateEventDto): Event {
         val event = eventRepository.findById(input.id.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
@@ -82,12 +81,12 @@ internal class EventService(
         if (input.description != null) event.changeDescription(input.description)
         if (input.date != null) event.changeDate(input.date)
 
-        eventRepository.add(event)
-        unitOfWork.commit()
+        eventRepository.update(event)
 
         return event
     }
 
+    @Transactional
     fun updateEventSection(input: UpdateEventSectionDto): Event {
         val event = eventRepository.findById(input.eventId.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
@@ -99,12 +98,12 @@ internal class EventService(
             price = input.price,
         )
 
-        eventRepository.add(event)
-        unitOfWork.commit()
+        eventRepository.update(event)
 
         return event
     }
 
+    @Transactional
     fun updateEventSpotLocation(input: UpdateEventSpotLocationDto): Event {
         val event = eventRepository.findById(input.eventId.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
@@ -115,32 +114,31 @@ internal class EventService(
             location = input.location,
         )
 
-        eventRepository.add(event)
-        unitOfWork.commit()
+        eventRepository.update(event)
 
         return event
     }
 
+    @Transactional
     fun publishAll(id: String): Event {
         val event = eventRepository.findById(id.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
 
         event.publishAll()
 
-        eventRepository.add(event)
-        unitOfWork.commit()
+        eventRepository.update(event)
 
         return event
     }
 
+    @Transactional
     fun unPublishAll(id: String): Event {
         val event = eventRepository.findById(id.toDomainUuid<EventId>())
             ?: throw Exception("Event not found")
 
         event.unPublishAll()
 
-        eventRepository.add(event)
-        unitOfWork.commit()
+        eventRepository.update(event)
 
         return event
     }

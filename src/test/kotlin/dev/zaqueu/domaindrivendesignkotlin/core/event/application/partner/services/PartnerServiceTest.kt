@@ -1,11 +1,9 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.CreatePartnerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.UpdatePartnerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities.Partner
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.repositories.PartnerRepository
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Assertions
@@ -106,13 +104,17 @@ class PartnerServiceTest {
             partnerRepository.findById(partner.id)
         } returns partner
 
+        coEvery {
+            partnerRepository.update(any())
+        } just Runs
+
         val updatedPartner = partnerService.update(input)
 
         Assertions.assertEquals(input.name, updatedPartner.name)
 
         verify {
             partnerRepository.findById(partner.id)
-            partnerRepository.add(any())
+            partnerRepository.update(any())
         }
         confirmVerified(partnerRepository)
     }
@@ -134,13 +136,17 @@ class PartnerServiceTest {
             partnerRepository.findById(partner.id)
         } returns partner
 
+        coEvery {
+            partnerRepository.update(any())
+        } just Runs
+
         val updatedPartner = partnerService.update(input)
 
         Assertions.assertEquals(partner.name, updatedPartner.name)
 
         verify {
             partnerRepository.findById(partner.id)
-            partnerRepository.add(any())
+            partnerRepository.update(any())
         }
         confirmVerified(partnerRepository)
     }
