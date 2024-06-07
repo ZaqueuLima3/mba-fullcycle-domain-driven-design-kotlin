@@ -6,7 +6,7 @@ import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
 
-@Entity
+@Entity(name = "events")
 @Table(name = "events")
 internal class EventEntity(
     @Id

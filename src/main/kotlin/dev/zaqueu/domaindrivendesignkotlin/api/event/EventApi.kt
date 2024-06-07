@@ -1,7 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.api.event
 
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.CreateEventRequest
-import dev.zaqueu.domaindrivendesignkotlin.api.event.models.EventListResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.EventResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.UpdateEventRequest
 import io.swagger.v3.oas.annotations.Operation
@@ -59,7 +58,7 @@ internal interface EventApi {
             ApiResponse(responseCode = "500", description = "An internal server error was thrown")
         ]
     )
-    fun listEvents(): ResponseEntity<List<EventListResponse>>
+    fun listEvents(): ResponseEntity<List<EventResponse>>
 
     @GetMapping(
         value = ["/{id}"],

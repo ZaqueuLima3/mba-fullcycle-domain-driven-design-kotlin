@@ -28,7 +28,7 @@ internal class EventSection(
         totalSpots: Long,
         price: Long,
     ) : this(
-        id = id.toDomainUuid(),
+        id = id.toDomainUuid<EventSectionId>(),
         name = name,
         description = description,
         isPublished = isPublished,

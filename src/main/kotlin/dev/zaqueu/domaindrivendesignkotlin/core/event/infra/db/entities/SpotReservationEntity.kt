@@ -6,9 +6,9 @@ import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
 
-@Entity
+@Entity(name = "spot_reservations")
 @Table(name = "spot_reservations")
-internal data class SpotReservationEntity(
+internal class SpotReservationEntity(
     @Id
     @Column(name = "id")
     var id: UUID,

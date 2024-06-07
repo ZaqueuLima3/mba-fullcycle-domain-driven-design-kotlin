@@ -16,7 +16,7 @@ internal data class Customer(
         name: String,
         cpf: Cpf,
     ) : this(
-        id = id.toDomainUuid(),
+        id = id.toDomainUuid<CustomerId>(),
         name = name,
         cpf = cpf,
     )

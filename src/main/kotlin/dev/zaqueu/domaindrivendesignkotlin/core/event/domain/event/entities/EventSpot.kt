@@ -17,7 +17,7 @@ internal data class EventSpot(
         isPublished: Boolean,
         isReserved: Boolean,
     ) : this(
-        id = id.toDomainUuid(),
+        id = id.toDomainUuid<EventSpotId>(),
         location = location,
         isPublished = isPublished,
         isReserved = isReserved,

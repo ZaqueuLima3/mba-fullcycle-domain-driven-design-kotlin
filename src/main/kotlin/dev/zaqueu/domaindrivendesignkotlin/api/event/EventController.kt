@@ -1,7 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.api.event
 
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.CreateEventRequest
-import dev.zaqueu.domaindrivendesignkotlin.api.event.models.EventListResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.EventResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.UpdateEventRequest
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.services.EventService
@@ -29,9 +28,9 @@ internal class EventController(
             .body(EventResponse.fromDomain(event))
     }
 
-    override fun listEvents(): ResponseEntity<List<EventListResponse>> {
+    override fun listEvents(): ResponseEntity<List<EventResponse>> {
         val events = eventService.findEvents()
-        val eventResponse = events.map { EventListResponse.fromDomain(it) }
+        val eventResponse = events.map { EventResponse.fromDomain(it) }
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(eventResponse)

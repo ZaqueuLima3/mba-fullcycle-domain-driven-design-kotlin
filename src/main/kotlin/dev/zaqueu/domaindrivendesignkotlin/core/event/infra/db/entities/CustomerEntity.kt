@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.util.*
 
-@Entity
+@Entity(name = "customers")
 @Table(name = "customers")
 internal class CustomerEntity(
     @Id

@@ -16,7 +16,7 @@ internal data class Partner(
         id: String? = null,
         name: String,
     ) : this(
-        id = id.toDomainUuid(),
+        id = id.toDomainUuid<PartnerId>(),
         name = name,
     )
 

@@ -1,5 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.api.event.models
 
+import dev.zaqueu.domaindrivendesignkotlin.api.eventsection.models.SectionResponse
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
 import kotlinx.serialization.Serializable
 
@@ -10,6 +11,7 @@ internal data class EventResponse(
     val description: String?,
     val date: String,
     val partnerId: String,
+    val sections: List<SectionResponse>
 ) {
     companion object {
         fun fromDomain(event: Event) = EventResponse(
@@ -18,6 +20,7 @@ internal data class EventResponse(
             description = event.description,
             date = event.date.toString(),
             partnerId = event.partnerId.value,
+            sections = event.sections.map { SectionResponse.fromDomain(it) }
         )
     }
 }

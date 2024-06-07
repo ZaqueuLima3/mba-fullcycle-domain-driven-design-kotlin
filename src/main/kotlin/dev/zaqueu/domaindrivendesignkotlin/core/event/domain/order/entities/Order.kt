@@ -21,7 +21,7 @@ internal data class Order(
         customerId: String,
         eventSpotId: String,
     ) : this(
-        id = id.toDomainUuid(),
+        id = id.toDomainUuid<OrderId>(),
         amount = amount,
         status = status,
         customerId = customerId.toDomainUuid(),

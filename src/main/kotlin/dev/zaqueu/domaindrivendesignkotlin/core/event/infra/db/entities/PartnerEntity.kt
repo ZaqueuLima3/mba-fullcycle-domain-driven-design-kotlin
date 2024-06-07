@@ -7,7 +7,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.util.*
 
-@Entity
+@Entity(name = "partners")
 @Table(name = "partners")
 internal class PartnerEntity(
     @Id

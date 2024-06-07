@@ -2,7 +2,6 @@ package dev.zaqueu.domaindrivendesignkotlin.e2eTest.event
 
 import dev.zaqueu.domaindrivendesignkotlin.E2ETest
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.CreateEventRequest
-import dev.zaqueu.domaindrivendesignkotlin.api.event.models.EventListResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.EventResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.event.models.UpdateEventRequest
 import dev.zaqueu.domaindrivendesignkotlin.api.partner.models.CreatePartnerRequest

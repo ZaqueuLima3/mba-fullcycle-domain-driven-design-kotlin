@@ -2,12 +2,13 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.entities.Order
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.valueobject.OrderId
 import jakarta.persistence.*
 import java.util.*
 
-@Entity
+@Entity(name = "orders")
 @Table(name = "orders")
-internal data class OrderEntity(
+internal class OrderEntity(
     @Id
     @Column(name = "id")
     var id: UUID,
@@ -40,7 +41,7 @@ internal data class OrderEntity(
 
         fun OrderEntity.toDomain(): Order {
             return Order(
-                id = id.toDomainUuid(),
+                id = id.toDomainUuid<OrderId>(),
                 amount = amount,
                 status = status,
                 customerId = customer.id.toDomainUuid(),

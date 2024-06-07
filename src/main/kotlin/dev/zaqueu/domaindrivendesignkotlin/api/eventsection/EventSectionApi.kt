@@ -1,8 +1,8 @@
 package dev.zaqueu.domaindrivendesignkotlin.api.eventsection
 
+import dev.zaqueu.domaindrivendesignkotlin.api.event.models.EventResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.eventsection.models.CreateSectionRequest
-import dev.zaqueu.domaindrivendesignkotlin.api.eventsection.models.EventSectionResponse
-import dev.zaqueu.domaindrivendesignkotlin.api.eventsection.models.SectionListResponse
+import dev.zaqueu.domaindrivendesignkotlin.api.eventsection.models.SectionResponse
 import dev.zaqueu.domaindrivendesignkotlin.api.eventsection.models.UpdateSectionRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -30,7 +30,7 @@ internal interface EventSectionApi {
     fun createSection(
         @PathVariable(name = "eventId") eventId: String,
         @RequestBody request: CreateSectionRequest
-    ): ResponseEntity<EventSectionResponse>
+    ): ResponseEntity<EventResponse>
 
     @PutMapping(
         value = ["{sectionId}"],
@@ -49,7 +49,7 @@ internal interface EventSectionApi {
         @PathVariable(name = "eventId") eventId: String,
         @PathVariable(name = "sectionId") sectionId: String,
         @RequestBody request: UpdateSectionRequest
-    ): ResponseEntity<EventSectionResponse>
+    ): ResponseEntity<EventResponse>
 
     @GetMapping(
         produces = [MediaType.APPLICATION_JSON_VALUE]
@@ -62,5 +62,5 @@ internal interface EventSectionApi {
             ApiResponse(responseCode = "500", description = "An internal server error was thrown")
         ]
     )
-    fun listSections(@PathVariable(name = "eventId") eventId: String): ResponseEntity<List<SectionListResponse>>
+    fun listSections(@PathVariable(name = "eventId") eventId: String): ResponseEntity<List<SectionResponse>>
 }

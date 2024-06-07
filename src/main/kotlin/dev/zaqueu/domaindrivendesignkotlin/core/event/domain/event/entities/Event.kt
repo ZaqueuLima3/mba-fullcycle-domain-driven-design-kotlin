@@ -32,7 +32,7 @@ internal class Event(
         totalSpotsReserved: Long,
         partnerId: String,
     ) : this(
-        id = id.toDomainUuid(),
+        id = id.toDomainUuid<EventId>(),
         name = name,
         description = description,
         date = date,
