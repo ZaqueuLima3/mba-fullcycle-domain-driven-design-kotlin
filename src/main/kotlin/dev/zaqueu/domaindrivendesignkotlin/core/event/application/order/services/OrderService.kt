@@ -1,6 +1,5 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.dto.CreateOrderDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.payment.gateway.PaymentGateway

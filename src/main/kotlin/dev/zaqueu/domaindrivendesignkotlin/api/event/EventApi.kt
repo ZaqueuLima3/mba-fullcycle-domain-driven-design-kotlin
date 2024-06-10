@@ -47,6 +47,23 @@ internal interface EventApi {
         @RequestBody request: UpdateEventRequest
     ): ResponseEntity<EventResponse>
 
+    @PutMapping(
+        value = ["{id}/publish-all"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    @Operation(summary = "Publish an event by it's identifier")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Event published successfully"),
+            ApiResponse(responseCode = "404", description = "Event was not found"),
+            ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+        ]
+    )
+    fun publishAll(
+        @PathVariable(name = "id") id: String
+    ): ResponseEntity<EventResponse>
+
     @GetMapping(
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
