@@ -1,6 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.services
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.event.dto.*
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.repositories.EventRepository
@@ -94,14 +95,15 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to list sections of a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            eventService.findSections(UUID.randomUUID().toString())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            eventService.findSections(expectedEventId)
         }
 
         Assertions.assertEquals(expectedMessage, actualException.message)
@@ -140,14 +142,15 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to list spots of a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            eventService.findSpots(UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            eventService.findSpots(expectedEventId, UUID.randomUUID().toString())
         }
 
         Assertions.assertEquals(expectedMessage, actualException.message)
@@ -155,7 +158,8 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to list spots of a non existent section`() {
-        val expectedMessage = "Section not found"
+        val expectedSectionId = UUID.randomUUID().toString()
+        val expectedMessage = "Section with id $expectedSectionId not found"
 
         val event = Event.create(
             name = "Event",
@@ -168,8 +172,8 @@ class EventServiceTest {
             eventRepository.findById(any())
         } returns event
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            eventService.findSpots(UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            eventService.findSpots(UUID.randomUUID().toString(), expectedSectionId)
         }
 
         Assertions.assertEquals(expectedMessage, actualException.message)
@@ -246,7 +250,8 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to create a event with non existent partner`() {
-        val expectedMessage = "Partner not found"
+        val expectedPartnerId = UUID.randomUUID().toString()
+        val expectedMessage = "Partner with id $expectedPartnerId not found"
 
         every {
             partnerRepository.findById(any())
@@ -256,10 +261,10 @@ class EventServiceTest {
             name = "Event",
             description = "description",
             date = Instant.now(),
-            partnerId = UUID.randomUUID().toString(),
+            partnerId = expectedPartnerId,
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.create(input)
         }
 
@@ -306,21 +311,22 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to add a section on a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
         val input = CreateEventSectionDto(
-            eventId = UUID.randomUUID().toString(),
+            eventId = expectedEventId,
             name = "Section",
             description = "description",
             totalSpots = 10,
             price = 1000,
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.addSection(input)
         }
 
@@ -401,19 +407,20 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to update a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
         val input = UpdateEventDto(
-            id = UUID.randomUUID().toString(),
+            id = expectedEventId,
             name = "Section",
             description = "description",
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.update(input)
         }
 
@@ -517,18 +524,19 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to update a section of a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
         val input = UpdateEventSectionDto(
-            eventId = UUID.randomUUID().toString(),
+            eventId = expectedEventId,
             sectionId = UUID.randomUUID().toString(),
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.updateEventSection(input)
         }
 
@@ -537,7 +545,8 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to update a non existent section`() {
-        val expectedMessage = "Section not found"
+        val expectedSectionId = UUID.randomUUID().toString()
+        val expectedMessage = "Section with id $expectedSectionId not found"
 
         val event = Event(
             id = UUID.randomUUID().toString(),
@@ -555,10 +564,10 @@ class EventServiceTest {
 
         val input = UpdateEventSectionDto(
             eventId = UUID.randomUUID().toString(),
-            sectionId = UUID.randomUUID().toString(),
+            sectionId = expectedSectionId,
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.updateEventSection(input)
         }
 
@@ -615,20 +624,21 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to update a spot location of a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
         val input = UpdateEventSpotLocationDto(
-            eventId = UUID.randomUUID().toString(),
+            eventId = expectedEventId,
             sectionId = UUID.randomUUID().toString(),
             spotId = UUID.randomUUID().toString(),
             location = "A1:11"
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.updateEventSpotLocation(input)
         }
 
@@ -637,7 +647,8 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to update a spot location of a non existent section`() {
-        val expectedMessage = "Section not found"
+        val expectedSectionId = UUID.randomUUID().toString()
+        val expectedMessage = "Section with id $expectedSectionId not found"
 
         val event = Event(
             id = UUID.randomUUID().toString(),
@@ -655,12 +666,12 @@ class EventServiceTest {
 
         val input = UpdateEventSpotLocationDto(
             eventId = event.id.value,
-            sectionId = UUID.randomUUID().toString(),
+            sectionId = expectedSectionId,
             spotId = UUID.randomUUID().toString(),
             location = "A1:11"
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.updateEventSpotLocation(input)
         }
 
@@ -669,7 +680,8 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to update a location of a non existent spot`() {
-        val expectedMessage = "Spot not found"
+        val expectedSpotId = UUID.randomUUID().toString()
+        val expectedMessage = "Spot with id $expectedSpotId not found"
 
         val event = Event(
             id = UUID.randomUUID().toString(),
@@ -695,11 +707,11 @@ class EventServiceTest {
         val input = UpdateEventSpotLocationDto(
             eventId = event.id.value,
             sectionId = event.sections.first().id.value,
-            spotId = UUID.randomUUID().toString(),
+            spotId = expectedSpotId,
             location = "A1:11"
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             eventService.updateEventSpotLocation(input)
         }
 
@@ -737,14 +749,15 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to publish a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            eventService.publishAll(UUID.randomUUID().toString())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            eventService.publishAll(expectedEventId)
         }
 
         Assertions.assertEquals(expectedMessage, actualException.message)
@@ -781,14 +794,15 @@ class EventServiceTest {
 
     @Test
     fun `should throws an exception when try to unPublish a non existent event`() {
-        val expectedMessage = "Event not found"
+        val expectedEventId = UUID.randomUUID().toString()
+        val expectedMessage = "Event with id $expectedEventId not found"
 
         every {
             eventRepository.findById(any())
         } returns null
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            eventService.unPublishAll(UUID.randomUUID().toString())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            eventService.unPublishAll(expectedEventId)
         }
 
         Assertions.assertEquals(expectedMessage, actualException.message)

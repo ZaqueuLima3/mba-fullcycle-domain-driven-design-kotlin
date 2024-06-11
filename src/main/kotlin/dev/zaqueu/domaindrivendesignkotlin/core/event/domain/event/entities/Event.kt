@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.AggregateRoot
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSectionId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
@@ -102,7 +103,7 @@ internal class Event(
         price: Long?,
     ) {
         val section = getSection(sectionId)
-            ?: throw Exception("Section not found")
+            ?: throw ResourceNotFoundException("Section with id $sectionId not found")
 
         if (name != null) section.changeName(name)
         if (description != null) section.changeDescription(description)
@@ -115,7 +116,7 @@ internal class Event(
         location: String,
     ) {
         val section = getSection(sectionId)
-            ?: throw Exception("Section not found")
+            ?: throw ResourceNotFoundException("Section with id $sectionId not found")
 
         section.changeSpotLocation(spotId, location)
     }
@@ -127,14 +128,14 @@ internal class Event(
         if (!this.isPublished) return false
 
         val section = getSection(sectionId)
-            ?: throw Exception("Section not found")
+            ?: throw ResourceNotFoundException("Section with id $sectionId not found")
 
         return section.allowReserveSpot(spotId)
     }
 
     fun reserveSpot(section: EventSection, spot: EventSpot) {
         val sectionFound = getSection(section.id)
-            ?: throw Exception("Section not found")
+            ?: throw ResourceNotFoundException("Section with id ${section.id} not found")
 
         sectionFound.reserveSpot(spot.id)
     }

@@ -1,6 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -447,7 +448,8 @@ class EventTest {
 
     @Test
     fun `should throws an exception if section do not exist`() {
-        val expectedErrorMessage = "Section not found"
+        val expectedSectionId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Section with id $expectedSectionId not found"
 
         val event = Event.create(
             name = "name",
@@ -457,8 +459,8 @@ class EventTest {
         )
         event.publishAll()
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            event.allowReserveSpot(UUID.randomUUID().toDomainUuid(), UUID.randomUUID().toDomainUuid())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            event.allowReserveSpot(expectedSectionId.toDomainUuid(), UUID.randomUUID().toDomainUuid())
         }
 
         Assertions.assertEquals(expectedErrorMessage, actualException.message)
@@ -466,8 +468,6 @@ class EventTest {
 
     @Test
     fun `should throws an exception when try to reserve a non existent section`() {
-        val expectedErrorMessage = "Section not found"
-
         val spot = EventSpot.create()
 
         val section = EventSection.create(
@@ -477,6 +477,8 @@ class EventTest {
             price = 1000,
         )
 
+        val expectedErrorMessage = "Section with id ${section.id} not found"
+
         val event = Event.create(
             name = "name",
             description = "description",
@@ -485,7 +487,7 @@ class EventTest {
         )
         event.publishAll()
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             event.reserveSpot(section, spot)
         }
 

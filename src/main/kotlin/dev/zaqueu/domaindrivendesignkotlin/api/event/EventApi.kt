@@ -71,7 +71,6 @@ internal interface EventApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Listed successfully"),
-            ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
             ApiResponse(responseCode = "500", description = "An internal server error was thrown")
         ]
     )
@@ -101,7 +100,6 @@ internal interface EventApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "204", description = "Event deleted successfully"),
-            ApiResponse(responseCode = "404", description = "Event was not found"),
             ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
         ]
     )

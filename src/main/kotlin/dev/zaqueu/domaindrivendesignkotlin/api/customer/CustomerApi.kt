@@ -40,6 +40,7 @@ internal interface CustomerApi {
         value = [
             ApiResponse(responseCode = "200", description = "Customer updated successfully"),
             ApiResponse(responseCode = "404", description = "Customer was not found"),
+            ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
         ]
     )
@@ -55,7 +56,6 @@ internal interface CustomerApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Listed successfully"),
-            ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
             ApiResponse(responseCode = "500", description = "An internal server error was thrown")
         ]
     )
@@ -85,7 +85,6 @@ internal interface CustomerApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "204", description = "Customer deleted successfully"),
-            ApiResponse(responseCode = "404", description = "Customer was not found"),
             ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
         ]
     )

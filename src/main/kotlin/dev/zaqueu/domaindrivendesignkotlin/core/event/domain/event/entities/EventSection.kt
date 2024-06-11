@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.Entity
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSectionId
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.valueobject.EventSpotId
 
@@ -90,7 +91,7 @@ internal class EventSection(
 
     fun changeSpotLocation(spotId: EventSpotId, location: String) {
         val spot = getSpot(spotId)
-            ?: throw Exception("Spot not found")
+            ?: throw ResourceNotFoundException("Spot with id $spotId not found")
 
         spot.changeLocation(location)
     }
@@ -101,14 +102,14 @@ internal class EventSection(
         if (!this.isPublished) return false
 
         val spot = getSpot(spotId)
-            ?: throw Exception("Spot not found")
+            ?: throw ResourceNotFoundException("Spot with id $spotId not found")
 
         return spot.allowReserveSpot()
     }
 
     fun reserveSpot(spotId: EventSpotId) {
         val spot = getSpot(spotId)
-            ?: throw Exception("Spot not found")
+            ?: throw ResourceNotFoundException("Spot with id $spotId not found")
 
         spot.reserve()
     }

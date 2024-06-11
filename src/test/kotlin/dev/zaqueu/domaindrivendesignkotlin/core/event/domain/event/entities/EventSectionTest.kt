@@ -1,11 +1,10 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSection
-import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.EventSpot
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 
 class EventSectionTest {
     @Test
@@ -207,7 +206,9 @@ class EventSectionTest {
 
     @Test
     fun `should throws an exception if spot do not exist`() {
-        val expectedErrorMessage = "Spot not found"
+        val expectedSpotId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Spot with id $expectedSpotId not found"
+
         val section = EventSection.create(
             name = "section",
             description = "description",
@@ -216,8 +217,8 @@ class EventSectionTest {
         )
         section.publish()
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            section.allowReserveSpot(UUID.randomUUID().toDomainUuid())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            section.allowReserveSpot(expectedSpotId.toDomainUuid())
         }
 
         Assertions.assertEquals(expectedErrorMessage, actualException.message)
@@ -225,7 +226,9 @@ class EventSectionTest {
 
     @Test
     fun `should throws an exception when try to reserve a non existent spot`() {
-        val expectedErrorMessage = "Spot not found"
+        val expectedSpotId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Spot with id $expectedSpotId not found"
+
         val section = EventSection.create(
             name = "section",
             description = "description",
@@ -234,8 +237,8 @@ class EventSectionTest {
         )
         section.publish()
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
-            section.reserveSpot(UUID.randomUUID().toDomainUuid())
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
+            section.reserveSpot(expectedSpotId.toDomainUuid())
         }
 
         Assertions.assertEquals(expectedErrorMessage, actualException.message)

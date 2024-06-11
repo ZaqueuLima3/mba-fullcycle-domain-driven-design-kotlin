@@ -35,8 +35,8 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidArgumentException::class)
     fun handleInvalidArgumentException(ex: InvalidArgumentException, request: WebRequest): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.message)
-        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+        val errorResponse = ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), ex.message)
+        return ResponseEntity(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
     @ExceptionHandler(InternalServerErrorException::class)
