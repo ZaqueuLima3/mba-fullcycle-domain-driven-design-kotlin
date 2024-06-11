@@ -299,7 +299,7 @@ class EventServiceTest {
 
         verifySequence {
             eventRepository.findById(event.id)
-            eventRepository.add(any())
+            eventRepository.update(any())
         }
         confirmVerified(eventRepository)
     }

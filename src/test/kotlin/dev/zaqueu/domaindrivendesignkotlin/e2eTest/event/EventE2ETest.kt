@@ -90,7 +90,7 @@ class EventE2ETest {
             .response
             .contentAsString
 
-        val events = json.decodeFromString<List<EventListResponse>>(response)
+        val events = json.decodeFromString<List<EventResponse>>(response)
 
         Assertions.assertEquals(2, events.size)
         Assertions.assertTrue(events.firstOrNull { it.id == eventId1 } != null)

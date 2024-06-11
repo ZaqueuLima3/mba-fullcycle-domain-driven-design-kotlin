@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.ValueObject
-import dev.zaqueu.domaindrivendesignkotlin.core.event.exceptions.InvalidArgumentException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.InvalidArgumentException
 
 internal class Cpf private constructor(value: String) : ValueObject<String>(value) {
 

@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.api.exception
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.BadRequestException
 import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.InternalServerErrorException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.InvalidArgumentException
 import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,6 +29,12 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException::class)
     fun handleBadRequestException(ex: BadRequestException, request: WebRequest): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.message)
+        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(InvalidArgumentException::class)
+    fun handleInvalidArgumentException(ex: InvalidArgumentException, request: WebRequest): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.message)
         return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
     }

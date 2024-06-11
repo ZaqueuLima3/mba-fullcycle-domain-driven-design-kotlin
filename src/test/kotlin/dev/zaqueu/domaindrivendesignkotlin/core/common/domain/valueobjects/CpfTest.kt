@@ -1,6 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects
 
-import dev.zaqueu.domaindrivendesignkotlin.core.event.exceptions.InvalidArgumentException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.InvalidArgumentException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.CreateCustomerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.CreateCustomerDto.Companion.toDomain
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.customer.dto.UpdateCustomerDto
@@ -33,7 +33,8 @@ internal class CustomerService(
 
     @Transactional
     fun update(input: UpdateCustomerDto): Customer {
-        val customer = customerRepository.findById(input.id.toDomainUuid<CustomerId>()) ?: throw Exception("Customer not found")
+        val customer = customerRepository.findById(input.id.toDomainUuid<CustomerId>())
+            ?: throw ResourceNotFoundException("Customer with id ${input.id} not found")
 
         if (!input.name.isNullOrBlank()) customer.changeName(input.name)
 
