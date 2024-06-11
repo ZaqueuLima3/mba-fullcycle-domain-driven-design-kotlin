@@ -1,7 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.services
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.application.UnitOfWork
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.CreatePartnerDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.CreatePartnerDto.Companion.toDomain
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.UpdatePartnerDto
@@ -35,7 +35,8 @@ internal class PartnerService(
 
     @Transactional
     fun update(input: UpdatePartnerDto): Partner {
-        val partner = partnerRepository.findById(input.id.toDomainUuid<PartnerId>()) ?: throw Exception("Partner not found")
+        val partner = partnerRepository.findById(input.id.toDomainUuid<PartnerId>())
+            ?: throw ResourceNotFoundException("Partner with id ${input.id} not found")
 
         if (!input.name.isNullOrBlank()) partner.changeName(input.name)
 

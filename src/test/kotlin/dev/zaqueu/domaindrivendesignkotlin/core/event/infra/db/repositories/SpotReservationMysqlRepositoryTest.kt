@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
@@ -124,14 +125,16 @@ class SpotReservationMysqlRepositoryTest {
     @Test
     @Transactional
     fun `should throws an Exception when try to add spotReservation with a non existent customer`() {
-        val expectedErrorMessage = "Customer not found"
+        val expectedCustomerId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Customer with id $expectedCustomerId not found"
+
         val spotReservation = SpotReservation.create(
             id = spotId.value,
-            customerId = UUID.randomUUID().toString(),
+            customerId = expectedCustomerId,
             reservationDate = Instant.now()
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             spotReservationRepository.add(spotReservation)
         }
 
@@ -141,14 +144,15 @@ class SpotReservationMysqlRepositoryTest {
     @Test
     @Transactional
     fun `should throws an Exception when try to add spotReservation with a non existent spot`() {
-        val expectedErrorMessage = "Spot not found"
+        val expectedSpotId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Spot with id $expectedSpotId not found"
         val spotReservation = SpotReservation.create(
-            id = UUID.randomUUID().toString(),
+            id = expectedSpotId,
             customerId = customer.id.value,
             reservationDate = Instant.now()
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             spotReservationRepository.add(spotReservation)
         }
 

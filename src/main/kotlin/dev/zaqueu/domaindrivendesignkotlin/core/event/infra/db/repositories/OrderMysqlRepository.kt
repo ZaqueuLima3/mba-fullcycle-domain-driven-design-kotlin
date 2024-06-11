@@ -1,6 +1,7 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.Uuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.entities.Order
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.order.repositories.OrderRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.entities.CustomerEntity
@@ -18,10 +19,10 @@ internal class OrderMysqlRepository(
 
     private fun getEntities(customerId: UUID, spotId: UUID): Pair<CustomerEntity, EventSpotEntity> {
         val customer = entityManager.find(CustomerEntity::class.java, customerId)
-            ?: throw Exception("Customer not found")
+            ?: throw ResourceNotFoundException("Customer with id $customerId not found")
 
         val eventSpot = entityManager.find(EventSpotEntity::class.java, spotId)
-            ?: throw Exception("Spot not found")
+            ?: throw ResourceNotFoundException("Spot with id $spotId not found")
 
         return customer to eventSpot
     }

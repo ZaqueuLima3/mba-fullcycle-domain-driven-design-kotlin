@@ -2,6 +2,7 @@ package dev.zaqueu.domaindrivendesignkotlin.core.event.infra.db.repositories
 
 import dev.zaqueu.domaindrivendesignkotlin.IntegrationTest
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.event.entities.Event
@@ -137,15 +138,16 @@ class OrderMysqlRepositoryTest {
     @Test
     @Transactional
     fun `should throws an Exception when try to add order with a non existent customer`() {
-        val expectedErrorMessage = "Customer not found"
+        val expectedCustomerId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Customer with id $expectedCustomerId not found"
         val order = Order.create(
             amount = 1000L,
             status = Order.Status.PENDING,
-            customerId = UUID.randomUUID().toString(),
+            customerId = expectedCustomerId,
             eventSpotId = spotId.value,
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             orderRepository.add(order)
         }
 
@@ -155,15 +157,16 @@ class OrderMysqlRepositoryTest {
     @Test
     @Transactional
     fun `should throws an Exception when try to add order with a non existent spot`() {
-        val expectedErrorMessage = "Spot not found"
+        val expectedSpotId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Spot with id $expectedSpotId not found"
         val order = Order.create(
             amount = 1000L,
             status = Order.Status.PENDING,
             customerId = customer.id.value,
-            eventSpotId = UUID.randomUUID().toString(),
+            eventSpotId = expectedSpotId,
         )
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             orderRepository.add(order)
         }
 
