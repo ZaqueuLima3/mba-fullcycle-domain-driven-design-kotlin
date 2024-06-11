@@ -1,5 +1,8 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.services
 
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ConflictRequestException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ForbiddenRequestException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.dto.CreateOrderDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.payment.gateway.PaymentGateway
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.entities.Customer
@@ -209,7 +212,7 @@ class OrderServiceTest {
             eventRepository.findById(any())
         } returns event
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ForbiddenRequestException::class.java) {
             orderService.create(input)
         }
 
@@ -281,7 +284,7 @@ class OrderServiceTest {
             eventRepository.findById(any())
         } returns event
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             orderService.create(input)
         }
 
@@ -344,7 +347,7 @@ class OrderServiceTest {
             eventRepository.findById(any())
         } returns event
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             orderService.create(input)
         }
 
@@ -400,7 +403,7 @@ class OrderServiceTest {
             eventRepository.findById(any())
         } returns null
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             orderService.create(input)
         }
 
@@ -447,7 +450,7 @@ class OrderServiceTest {
             customerRepository.findById(any())
         } returns null
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ResourceNotFoundException::class.java) {
             orderService.create(input)
         }
 
@@ -475,7 +478,8 @@ class OrderServiceTest {
 
     @Test
     fun `should not create a duplicated order`() {
-        val expectedErrorMessage = "Spot already reserved"
+        val expectedSpotId = UUID.randomUUID().toString()
+        val expectedErrorMessage = "Spot with id $expectedSpotId is already reserved"
 
         val spotReservation = SpotReservation.create(
             customerId = UUID.randomUUID().toString(),
@@ -485,7 +489,7 @@ class OrderServiceTest {
 
         val input = CreateOrderDto(
             customerId = UUID.randomUUID().toString(),
-            spotId = UUID.randomUUID().toString(),
+            spotId = expectedSpotId,
             sectionId = UUID.randomUUID().toString(),
             eventId = UUID.randomUUID().toString(),
             cardToken = UUID.randomUUID().toString(),
@@ -495,7 +499,7 @@ class OrderServiceTest {
             spotReservationRepository.findById(any())
         } returns spotReservation
 
-        val actualException = Assertions.assertThrows(Exception::class.java) {
+        val actualException = Assertions.assertThrows(ConflictRequestException::class.java) {
             orderService.create(input)
         }
 

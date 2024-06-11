@@ -21,6 +21,8 @@ internal interface OrderApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "201", description = "Created successfully"),
+            ApiResponse(responseCode = "403", description = "Event or spot not allowed to reserve"),
+            ApiResponse(responseCode = "409", description = "Trying to reserve a spot that is already reserved"),
             ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
         ]

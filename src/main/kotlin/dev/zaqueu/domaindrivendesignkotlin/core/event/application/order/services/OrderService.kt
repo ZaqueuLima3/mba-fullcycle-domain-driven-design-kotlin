@@ -1,6 +1,9 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.services
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ConflictRequestException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ForbiddenRequestException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.order.dto.CreateOrderDto
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.payment.gateway.PaymentGateway
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.customer.repositories.CustomerRepository
@@ -31,22 +34,22 @@ internal class OrderService(
     @Transactional
     fun create(input: CreateOrderDto): Order {
         spotReservationRepository.findById(input.spotId.toDomainUuid<EventSpotId>())?.let {
-            throw Exception("Spot already reserved")
+            throw ConflictRequestException("Spot with id ${input.spotId} is already reserved")
         }
 
         customerRepository.findById(input.customerId.toDomainUuid<CustomerId>())
-            ?: throw Exception("Customer not found with ID: ${input.customerId}")
+            ?: throw ResourceNotFoundException("Customer not found with ID: ${input.customerId}")
 
         val event = eventRepository.findById(input.eventId.toDomainUuid<EventId>())
-            ?: throw Exception("Event not found with ID: ${input.eventId}")
+            ?: throw ResourceNotFoundException("Event not found with ID: ${input.eventId}")
 
         val section = event.getSection(input.sectionId.toDomainUuid())
-            ?: throw Exception("Section not found with ID: ${input.sectionId}")
+            ?: throw ResourceNotFoundException("Section not found with ID: ${input.sectionId}")
 
         val spot = section.getSpot(input.spotId.toDomainUuid())
-            ?: throw Exception("Spot not found with ID: ${input.spotId}")
+            ?: throw ResourceNotFoundException("Spot not found with ID: ${input.spotId}")
 
-        if (!event.allowReserveSpot(section.id, spot.id)) throw Exception("Spot not available")
+        if (!event.allowReserveSpot(section.id, spot.id)) throw ForbiddenRequestException("Spot not available")
 
         event.reserveSpot(section, spot)
 

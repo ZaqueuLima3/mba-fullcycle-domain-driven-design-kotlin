@@ -1,9 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.api.exception
 
-import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.BadRequestException
-import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.InternalServerErrorException
-import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.InvalidArgumentException
-import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
+import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -34,7 +31,10 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidArgumentException::class)
-    fun handleInvalidArgumentException(ex: InvalidArgumentException, request: WebRequest): ResponseEntity<ErrorResponse> {
+    fun handleInvalidArgumentException(
+        ex: InvalidArgumentException,
+        request: WebRequest
+    ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), ex.message)
         return ResponseEntity(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY)
     }
@@ -46,6 +46,21 @@ class GlobalExceptionHandler {
     ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.message)
         return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(ConflictRequestException::class)
+    fun handleConflictException(
+        ex: ConflictRequestException,
+        request: WebRequest
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(HttpStatus.CONFLICT.value(), ex.message)
+        return ResponseEntity(errorResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(ForbiddenRequestException::class)
+    fun handleForbiddenException(ex: ForbiddenRequestException, request: WebRequest): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(HttpStatus.FORBIDDEN.value(), ex.message)
+        return ResponseEntity(errorResponse, HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(Exception::class)
