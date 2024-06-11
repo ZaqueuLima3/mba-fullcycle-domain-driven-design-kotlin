@@ -1,0 +1,5 @@
+steps:
+  - name: 'docker/compose:1.28.6'
+    args: ['-f', 'docker-compose.yml', 'up', '--build', '-d']
+
+timeout: '900s'
