@@ -1,0 +1,1 @@
+/Users/zaqueusantos/Projects/Backend/Kotlin/domain-driven-design-kotlin/src/integrationTest/kotlin/dev/zaqueu/domaindrivendesignkotlin/core/event/infra/db/repositories/CustomerMysqlRepositoryITest.kt
