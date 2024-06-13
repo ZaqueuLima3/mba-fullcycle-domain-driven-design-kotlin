@@ -1,6 +1,8 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.entities
 
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.domainevents.partner.PartnerChangedNameEvent
+import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.domainevents.partner.PartnerCreatedEvent
 import dev.zaqueu.domaindrivendesignkotlin.core.event.domain.partner.valueobject.PartnerId
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -48,6 +50,28 @@ class PartnerTest {
 
         Assertions.assertEquals(expectedId.value, partner.id.value)
         Assertions.assertEquals(expectedName, partner.name)
+    }
+
+    @Test
+    fun `should register a domain event when a domain command occurred`() {
+        var expectedName = "Disney"
+
+        val partner = Partner.create(
+            name = expectedName,
+        )
+
+        val eventCreated = partner.events.first { it is PartnerCreatedEvent } as PartnerCreatedEvent
+        Assertions.assertTrue(partner.events.size == 1)
+        Assertions.assertEquals(partner.id, eventCreated.aggregateRootId)
+        Assertions.assertEquals(expectedName, eventCreated.name)
+
+        expectedName = "Disney plus"
+        partner.changeName(expectedName)
+
+        val eventChanged = partner.events.first { it is PartnerChangedNameEvent } as PartnerChangedNameEvent
+        Assertions.assertTrue(partner.events.size == 2)
+        Assertions.assertEquals(partner.id, eventChanged.aggregateRootId)
+        Assertions.assertEquals(expectedName, eventChanged.name)
     }
 
     @Test

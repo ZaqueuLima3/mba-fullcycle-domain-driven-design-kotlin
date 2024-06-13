@@ -72,7 +72,7 @@ internal class OrderService(
             paymentGateway.payment(token = input.cardToken, amount = order.amount)
             order.pay()
 
-            eventRepository.add(event)
+            eventRepository.update(event)
             orderRepository.add(order)
 
             order

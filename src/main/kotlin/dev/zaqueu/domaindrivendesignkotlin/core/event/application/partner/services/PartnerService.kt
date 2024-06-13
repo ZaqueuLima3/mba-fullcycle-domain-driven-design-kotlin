@@ -1,5 +1,6 @@
 package dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.services
 
+import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.domainevents.DomainEventManager
 import dev.zaqueu.domaindrivendesignkotlin.core.common.domain.valueobjects.toDomainUuid
 import dev.zaqueu.domaindrivendesignkotlin.core.common.exceptions.ResourceNotFoundException
 import dev.zaqueu.domaindrivendesignkotlin.core.event.application.partner.dto.CreatePartnerDto
@@ -13,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 internal class PartnerService(
-    private val partnerRepository: PartnerRepository
+    private val partnerRepository: PartnerRepository,
+    private val domainEventManager: DomainEventManager,
 ) {
     @Transactional
     fun list(): List<Partner> {
@@ -24,6 +26,7 @@ internal class PartnerService(
     fun register(input: CreatePartnerDto): Partner {
         val partner = input.toDomain()
         partnerRepository.add(partner)
+        domainEventManager.publish(partner)
         return partner
     }
 
@@ -41,6 +44,7 @@ internal class PartnerService(
         if (!input.name.isNullOrBlank()) partner.changeName(input.name)
 
         partnerRepository.update(partner)
+        domainEventManager.publish(partner)
 
         return partner
     }

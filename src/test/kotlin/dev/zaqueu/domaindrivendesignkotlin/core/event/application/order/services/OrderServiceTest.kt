@@ -136,6 +136,10 @@ class OrderServiceTest {
         } returns event
 
         every {
+            eventRepository.update(any())
+        } just Runs
+
+        every {
             paymentGateway.payment(any(), any())
         } just Runs
 
